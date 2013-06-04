@@ -40,11 +40,25 @@ def updateLineCounts():
     (linecount, filename) = line.split()
     update("linecount " + filename, linecount)
 
+def updatePageCounts():
+  command = "ls tags/tmp/*.log"
+  (output, error) = execute(command)
+  for filename in filter(None, output.split("\n")):
+    f = open("../../stacks-project/" + filename) # TODO configuration
+    for line in f:
+      if "Output written on " in line:
+        update("pagecount " + filename.split("/")[-1].split(".")[0], line.split(" ")[4][1:])
+
+
+
 
 # TODO fix config
 connection = sqlite3.connect("../../stacks-website/database/stacks.sqlite")
 
+print "Updating the line counts"
 updateLineCounts()
+print "Updating the page counts"
+updatePageCounts()
 
 connection.commit()
 connection.close()

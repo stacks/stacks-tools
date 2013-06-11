@@ -4,7 +4,7 @@
 import os.path, sqlite3, sys
 
 def execute(filename):
-  query = open(filename, "r").read()
+  query = open("database/" + filename, "r").read()
   cursor = connection.cursor()
   cursor.execute(query)
 

@@ -12,7 +12,9 @@ CREATE TABLE "tags" (
   "position" INTEGER,
   "creation_date" DATETIME,
   "creation_commit" VARCHAR,
-  "modification_date" DATETIME
-  "modification_commit" VARCHAR
+  "modification_date" DATETIME,
+  "modification_commit" VARCHAR,
+  "begin" INTEGER,
+  "end" INTEGER
 );
 

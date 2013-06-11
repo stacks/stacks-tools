@@ -1,6 +1,7 @@
-import json
+import json, sqlite3
 from collections import deque, defaultdict
-import sqlite3
+
+import config
 from functions import *
 
 def find_tag(label, label_tags):
@@ -10,7 +11,7 @@ def find_tag(label, label_tags):
     return label_tags[label]
 
 # path to the TeX files
-path = get_path()
+path = config.websiteProject + "/"
 # list of TeX files
 files = list_text_files(path)
 
@@ -101,7 +102,7 @@ for name in files:
 
   tex_file.close()
 
-connection = sqlite3.connect("../../stacks-website/database/stacks.sqlite") # TODO configuration
+connection = sqlite3.connect(config.database)
 
 # get names for tags from the database
 names = {}
@@ -211,7 +212,7 @@ def getAllTags():
 def removeProof(content):
   return content.split("\\begin{proof}")[0]
 
-# TODO not necessary
+# not necessary for now
 #getAllTags()
 
 # dictionary for easy label access
@@ -344,7 +345,7 @@ def generatePacked(tag):
 
 
 # force directed dependency graph
-def generateGraphs():
+def generateForceDirectedGraphs():
   for tag in tags:
     global mapping, n, result
     # clean data
@@ -352,7 +353,7 @@ def generateGraphs():
     n = 0
     result = {"nodes": [], "links": []}
   
-    f = open("data/" + tag[0] + "-force.json", "w")
+    f = open(config.website + "/data/" + tag[0] + "-force.json", "w")
     generateGraph(tag[0])
     print "generating " + tag[0] + "-force.json, which contains " + str(len(result["nodes"])) + " nodes and " + str(len(result["links"])) + " links"
     f.write(json.dumps(result, indent = 2))
@@ -375,7 +376,7 @@ def optimizeTree(tag):
       tree = candidate
       cutoffValue = cutoffValue + 1
 
-def generateTrees():
+def generateClusterGraphs():
   for tag in tags:
     f = open("data/" + tag[0] + "-tree.json", "w")
     #result = generateTree(tag[0], cutoff = 3)
@@ -398,7 +399,7 @@ def getChildren(tag):
 
 
 # packed view with clusters corresponding to parts and chapters
-def generatePackeds():
+def generateCollapsibleGraphs():
   for tag in tags:
     f = open("data/" + tag[0] + "-packed.json", "w")
     packed = generatePacked(tag[0])
@@ -407,8 +408,5 @@ def generatePackeds():
     f.close()
 
 
-generateGraphs()
-generateTrees()
-generatePackeds()
-
 # TODO the book_id of an item is horribly wrong, which yields bad results in the packed version
+# TODO the folder stacks-website/data should be created

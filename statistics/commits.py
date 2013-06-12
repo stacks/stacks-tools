@@ -77,17 +77,10 @@ def tagExists(tag):
   return getLineNumber(tag) != 0
 
 
-def updateCommitInformation(tag, cursor):
-  # TODO check for existence of a tag first, if it doesn't exist this is an error
-
-  print "Updating " + tag
-
-  (creationDate, creationCommit) = getCreationDate(tag)
-  (modificationDate, modificationCommit) = getModificationDate(tag)
-
+def updateCommitInformation(tag, creation, modified, cursor):
   try:
     query = "UPDATE tags SET creation_date = ?, creation_commit = ?, modification_date = ?, modification_commit = ? WHERE tag = ?"
-    cursor.execute(query, [creationDate, creationCommit, modificationDate, modificationCommit, tag])
+    cursor.execute(query, [creation[0], creation[1], modified[0], modified[1], tag])
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
@@ -96,8 +89,37 @@ def updateCommitInformation(tag, cursor):
 def updateCommits():
   (connection, cursor) = general.connect()
 
+  (what, error) = general.execute("git whatchanged --reverse -p tags/tags")
+  creation = {}
+  modified = {}
+  for line in what.split("\n"):
+    if line == "":
+      continue
+    if line.find('commit') == 0:
+      commit = line[7:]
+      new = 1
+      continue
+    if line.find('Date') == 0:
+      date = line[12:]
+      continue
+    if line.find('#') >= 0:
+      continue
+    if line.find('@@') == 0:
+      new = 0
+      continue
+    if new == 0:
+      c = line[0]
+      if not c == '+':
+        continue
+      line = line.lstrip(c)
+      tag = line.split(',')[0]
+      label = line.split(',')[1]
+      if tag not in creation:
+        creation[tag] = [date, commit]
+      modified[tag] = [date, commit]
+
   tags = getTags(cursor)
   for tag in tags:
-    updateCommitInformation(tag, cursor)
+    updateCommitInformation(tag, creation[tag], modified[tag], cursor)
 
   general.close(connection)

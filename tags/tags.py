@@ -30,10 +30,10 @@ def get_labels_from_source(path):
 
   return labels
 
-def get_label(tag):
+def get_label(tag, cursor):
   try:
     query = 'SELECT label FROM tags where tag = "' + tag + '"'
-    cursor = connection.execute(query)
+    cursor = cursor.execute(query)
 
     return cursor.fetchone()[0]
 
@@ -75,7 +75,7 @@ def tag_exists(tag, cursor):
 def is_active(tag, cursor):
   try:
     query = 'SELECT active FROM tags WHERE tag = ?'
-    result = connection.execute(query, [tag])
+    result = cursor.execute(query, [tag])
     return result.fetchone()[0] == 'TRUE'
 
   except sqlite3.Error, e:
@@ -104,10 +104,10 @@ def set_inactive(tag, cursor):
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
-def set_active(tag):
+def set_active(tag, cursor):
   try:
     query = 'UPDATE tags SET active = "TRUE" WHERE tag = ?'
-    connection.execute(query, [tag])
+    cursor.execute(query, [tag])
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
@@ -164,12 +164,12 @@ def importTags():
       sys.exit()
 
     if tag_exists(tag, cursor) and get_label(tag, cursor) != label:
-      print 'The label for tag %s has changed from \'%s\'to \'%s\'' % (tag, get_label(tag), label)
-    if not tag_exists(tag):
+      print 'The label for tag %s has changed from \'%s\'to \'%s\'' % (tag, get_label(tag, cursor), label)
+    if not tag_exists(tag, cursor):
       print 'New tag %s with label \'%s\'' % (tag, label)
 
     info = labels[label]
-    insert_tag(tag, (label, info[0], info[2][1], info[1][1], info[1][0], info[1][2], info[2][3], info[1][4]))
+    insert_tag(tag, (label, info[0], info[2][1], info[1][1], info[1][0], info[1][2], info[2][3], info[1][4]), cursor)
 
   general.close(connection)
 
@@ -181,17 +181,17 @@ def checkTags():
   print 'Parsing the tags file'
   active_tags = parse_tags(config.websiteProject + "/tags/tags").keys()
 
-  tags = get_tags()
+  tags = get_tags(cursor)
 
   for tag in tags:
     # check whether the tag is no longer used in the project
-    if tag[0] not in active_tags and is_active(tag[0]):
+    if tag[0] not in active_tags and is_active(tag[0], cursor):
       print '   ', tag[0], 'has become inactive'
       set_inactive(tag[0], cursor)
 
     # probably not necessary, but check whether a tag is again used in the project
     if tag[1] == 'FALSE' and tag[0] in active_tags:
       print '   ', tag[0], 'has become active again'
-      set_active(tag[0])
+      set_active(tag[0], cursor)
 
   general.close(connection)

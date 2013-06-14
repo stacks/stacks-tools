@@ -356,6 +356,7 @@ def generateForceDirectedGraphs():
     f = open(config.website + "/data/" + tag[0] + "-force.json", "w")
     generateGraph(tag[0])
     print "generating " + tag[0] + "-force.json, which contains " + str(len(result["nodes"])) + " nodes and " + str(len(result["links"])) + " links"
+
     f.write(json.dumps(result, indent = 2))
     f.close()
 
@@ -378,7 +379,7 @@ def optimizeTree(tag):
 
 def generateClusterGraphs():
   for tag in tags:
-    f = open("data/" + tag[0] + "-tree.json", "w")
+    f = open(config.website + "/data/" + tag[0] + "-tree.json", "w")
     #result = generateTree(tag[0], cutoff = 3)
     result = optimizeTree(tag[0])
     print "generating " + tag[0] + " which contains " + str(countTree(result)) + " nodes"
@@ -406,6 +407,36 @@ def generateCollapsibleGraphs():
     print "generating packed view for " + tag[0]
     f.write(json.dumps(packed, indent = 2))
     f.close()
+
+
+# information on 
+used = set([]) 
+
+def getEdgesCount(tag, clear = True):
+  global used
+  if clear:
+    used = set([])
+
+  if tag in used:
+    return 0
+
+  else:
+    used.add(tag)
+    return len(list(tags_refs[tag])) + sum([getEdgesCount(child, False) for child in tags_refs[tag]], 0)
+
+def getNodesCount(tag):
+  return len(getChildren(tag))
+
+def scatter():
+  f = open(config.website + "/data/scatter.dat", "w")
+
+  for tag, label in tags:
+    edges = getEdgesCount(tag)
+    nodes = getNodesCount(tag)
+
+    f.write(str(edges) + "\t" + str(nodes) + "\t" + tag + "\n")
+
+  f.close()
 
 
 # TODO the book_id of an item is horribly wrong, which yields bad results in the packed version

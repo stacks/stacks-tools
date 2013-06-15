@@ -1,7 +1,7 @@
 import json, sqlite3
 from collections import deque, defaultdict
 
-import config
+import config, general
 from functions import *
 
 def find_tag(label, label_tags):
@@ -427,6 +427,14 @@ def getEdgesCount(tag, clear = True):
 def getNodesCount(tag):
   return len(getChildren(tag))
 
+def getNodesCountWithMultiplicity(tag):
+  return 1 + sum([getNodesCountWithMultiplicity(child) for child in tags_refs[tag]])
+
+def getChapterCount(tag):
+  return len(set([tagToChapter[child] for child in getChildren(tag)]))
+
+
+# code for a scatter plot
 def scatter():
   f = open(config.website + "/data/scatter.dat", "w")
 
@@ -437,6 +445,44 @@ def scatter():
     f.write(str(edges) + "\t" + str(nodes) + "\t" + tag + "\n")
 
   f.close()
+
+# TODO this is code duplication with statistics/counts.py, but eventually this code should be moved there anyway, then this code becomes something for statistics.general
+def keyExists(key, cursor):
+  try:
+    query = "SELECT COUNT(*) FROM statistics WHERE key = ?"
+    cursor = cursor.execute(query, [key])
+
+    return cursor.fetchone()[0] > 0
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+ 
+
+def update(key, value, cursor):
+  try:
+    if keyExists(key, cursor):
+      query = 'UPDATE statistics SET value = ? WHERE key = ?'
+      cursor.execute(query, [value, key])
+    else:
+      query = 'INSERT INTO statistics (key, value) VALUES (?, ?)'
+      cursor.execute(query, [key, value])
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+  
+
+def updateCounts():
+  (connection, cursor) = general.connect()
+
+  for tag, label in tags:
+    print "updating " + tag
+    update(tag + " node count", getNodesCount(tag), cursor)
+    update(tag + " edge count", getEdgesCount(tag), cursor)
+    update(tag + " total edge count", getNodesCountWithMultiplicity(tag), cursor)
+    update(tag + " chapter count", getChapterCount(tag), cursor)
+    connection.commit()
+
+  general.close(connection)
 
 
 # TODO the book_id of an item is horribly wrong, which yields bad results in the packed version

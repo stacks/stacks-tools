@@ -17,7 +17,7 @@ def list_tex_files(path):
   return list_files(path, '.tex')
 
 # get the title from a TeX file
-def get_title(path):
+def get_chapter_title(path):
   tex_file = open(path, 'r')
 
   title = ''
@@ -33,7 +33,7 @@ def get_titles(path):
   titles = {}
 
   for tex_file in list_tex_files(path):
-    titles[tex_file[0:-4]] = get_title(path + tex_file)
+    titles[tex_file[0:-4]] = get_chapter_title(path + tex_file)
 
   return titles
 

@@ -1,4 +1,5 @@
 import json, sqlite3
+import time #TODO remove
 from collections import deque, defaultdict
 
 import config, general
@@ -422,7 +423,9 @@ def generateClusterGraphs():
     f.write(json.dumps(result, indent = 2))
     f.close()
 
-def getChildren(tag):
+tagToChildren = {}
+
+def mapChildrenToTag(tag):
   queue = deque([tag])
   result = set([])
 
@@ -433,6 +436,19 @@ def getChildren(tag):
       queue.extend(tags_refs[tag])
 
   return result
+
+# we cache these results as we need them very often
+def mapChildren():
+  global tagToChildren
+  for tag, label in tags:
+    tagToChildren[tag] = mapChildrenToTag(tag)
+
+mapChildren()
+
+def getChildren(tag):
+  global tagToChildren
+  return tagToChildren[tag]
+
 
 
 # packed view with clusters corresponding to parts and chapters
@@ -463,11 +479,22 @@ def getEdgesCount(tag, clear = True):
 def getNodesCount(tag):
   return len(getChildren(tag))
 
-def getNodesCountWithMultiplicity(tag):
-  return 1 + sum([getNodesCountWithMultiplicity(child) for child in tags_refs[tag]])
+def getEdgesCountWithMultiples(tag):
+  queue = deque([tag])
+  result = 0
+
+  while queue:
+    tag = queue.popleft()
+    result = result + 1
+    queue.extend(tags_refs[tag])
+
+  return result - 1
 
 def getChapterCount(tag):
   return len(set([tagToChapter[child] for child in getChildren(tag)]))
+
+def getSectionCount(tag):
+  return len(set([tagToSection[child] for child in getChildren(tag)]))
 
 
 # code for a scatter plot
@@ -510,18 +537,16 @@ def update(key, value, cursor):
 def updateCounts():
   (connection, cursor) = general.connect()
 
-  print tagToChapter
-
   for tag, label in tags:
+    if tag[3] == "0": connection.commit() # TODO remove this eventually
+    if tag[3] == "0": print "committed"
     print "updating " + tag
     update(tag + " node count", getNodesCount(tag), cursor)
     update(tag + " edge count", getEdgesCount(tag), cursor)
-    update(tag + " total edge count", getNodesCountWithMultiplicity(tag) - 1, cursor)
+    update(tag + " total edge count", getEdgesCountWithMultiples(tag), cursor)
     update(tag + " chapter count", getChapterCount(tag), cursor)
-    connection.commit()
+    update(tag + " section count", getSectionCount(tag), cursor)
 
   general.close(connection)
 
-
-# TODO the book_id of an item is horribly wrong, which yields bad results in the packed version
 # TODO the folder stacks-website/data should be created

@@ -496,6 +496,51 @@ def getChapterCount(tag):
 def getSectionCount(tag):
   return len(set([tagToSection[child] for child in getChildren(tag)]))
 
+def getReferencingTagsCount(tag):
+  result = 0
+  for candidate, label in tags:
+    if tag in tags_refs[candidate]: result = result + 1
+
+  return result
+
+def getIndirectReferencingTagsCount(tag):
+  result = 0
+  for candidate, label in tags:
+    if tag in getChildren(candidate): result = result + 1
+
+  return result
+
+# TODO move to file and call somewhere else
+def clearDependencies():
+  (connection, cursor) = general.connect()
+
+  try:
+    query = 'DELETE FROM dependencies'
+    cursor.execute(query)
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+  general.close(connection)
+
+def addDependency(source, target, cursor):
+  try:
+    query = 'INSERT INTO dependencies (source, target) VALUES (?, ?)'
+    cursor.execute(query, [source, target])
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+def insertDependencies():
+  (connection, cursor) = general.connect()
+
+  for tag, label in tags:
+    for child in tags_refs[tag]:
+      addDependency(tag, child, cursor)
+
+  general.close(connection)
+
+
 
 # code for a scatter plot
 def scatter():
@@ -546,6 +591,8 @@ def updateCounts():
     update(tag + " total edge count", getEdgesCountWithMultiples(tag), cursor)
     update(tag + " chapter count", getChapterCount(tag), cursor)
     update(tag + " section count", getSectionCount(tag), cursor)
+    update(tag + " use count", getReferencingTagsCount(tag), cursor)
+    update(tag + " indirect use count", getIndirectReferencingTagsCount(tag), cursor)
 
   general.close(connection)
 

@@ -154,37 +154,73 @@ tagToSection = {}
 tagToChapter = {}
 
 sections = {}
+filenameToChapter = {}
 
 def getSectionsAndChapters():
+  global sections, filenameToChapter
+
   try:
-    query = "SELECT tags.book_id, tags.name, tags.tag FROM tags, sections WHERE tags.book_id = sections.number AND type = 'section'"
+    query = "SELECT tags.book_id, tags.name, tags.tag, file FROM tags, sections WHERE tags.book_id = sections.number AND type = 'section'"
     cursor = connection.execute(query)
 
     result = cursor.fetchall()
     for section in result:
-      sections[section[0]] = (section[0], section[1], section[2])
+      sections[section[0]] = (section[0], section[1], section[2], section[3])
+      if not "." in section[0]:
+        filenameToChapter[section[3]] = section[0]
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
 getSectionsAndChapters()
 
-def mapTagToSectionAndChapter(tag):
-  ID = tagToID[tag]
-  if ID == '': # TODO check whether this is possible in real life
-    tagToSection[tag] = ("", "", "")
-    tagToChapter[tag] = ("", "", "")
-    return
 
-  chapterID = ".".join(ID.split(".")[0:1])
-  sectionID = ".".join(ID.split(".")[0:2])
+def getPosition(tag):
+  try:
+    query = "SELECT position FROM tags WHERE tag = :tag"
+    cursor = connection.execute(query, [tag])
 
-  tagToSection[tag] = sections[sectionID]
-  tagToChapter[tag] = sections[chapterID]
+    result = cursor.fetchone()
+    if result != None:
+      return result[0]
+    else:
+      return ""
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+def getContainingTag(position):
+  try:
+    query = "SELECT tag FROM tags WHERE position < ? AND active = 'TRUE' AND type != 'item' AND TYPE != 'equation' ORDER BY position DESC LIMIT 1"
+    cursor = connection.execute(query, [position])
+
+    return cursor.fetchone()[0]
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+
+def mapTagToSectionAndChapter(tag, label):
+  (filename, tagType) = tuple(split_label(label)[0:2])
+
+  # chapter is based on filename
+  tagToChapter[tag] = sections[filenameToChapter[filename]]
+
+  # section is a little harder due to items
+  if tagType != "item":
+    ID = tagToID[tag]
+    sectionID = ".".join(ID.split(".")[0:2])
+    tagToSection[tag] = sections[sectionID]
+  else:
+    containingTag = getContainingTag(getPosition(tag)) # we have to use the tag that contains this item
+    ID = tagToID[containingTag]
+    sectionID = ".".join(ID.split(".")[0:2])
+    tagToSection[tag] = sections[sectionID]
+
 
 def mapTags():
   for tag, label in tags:
-    mapTagToSectionAndChapter(tag)
+    mapTagToSectionAndChapter(tag, label)
 
 mapTags()
 
@@ -402,7 +438,7 @@ def getChildren(tag):
 # packed view with clusters corresponding to parts and chapters
 def generateCollapsibleGraphs():
   for tag in tags:
-    f = open("data/" + tag[0] + "-packed.json", "w")
+    f = open(config.website + "/data/" + tag[0] + "-packed.json", "w")
     packed = generatePacked(tag[0])
     print "generating packed view for " + tag[0]
     f.write(json.dumps(packed, indent = 2))
@@ -474,11 +510,13 @@ def update(key, value, cursor):
 def updateCounts():
   (connection, cursor) = general.connect()
 
+  print tagToChapter
+
   for tag, label in tags:
     print "updating " + tag
     update(tag + " node count", getNodesCount(tag), cursor)
     update(tag + " edge count", getEdgesCount(tag), cursor)
-    update(tag + " total edge count", getNodesCountWithMultiplicity(tag), cursor)
+    update(tag + " total edge count", getNodesCountWithMultiplicity(tag) - 1, cursor)
     update(tag + " chapter count", getChapterCount(tag), cursor)
     connection.commit()
 

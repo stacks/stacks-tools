@@ -1,5 +1,5 @@
 # location of stacks-website/ (relative to this file)
-website = "../stacks-website-new"
+website = "../stacks-website"
 
 # location of the database (relative to this file)
 database = "../stacks-website/database/stacks.sqlite"
@@ -8,4 +8,4 @@ database = "../stacks-website/database/stacks.sqlite"
 websiteProject = "../stacks-website/tex"
 
 # location of the "local" stacks-project folder
-localProject = websiteProject
+localProject = "../stacks-project"

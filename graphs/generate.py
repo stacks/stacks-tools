@@ -24,18 +24,36 @@ label_tags = dict((tags[n][1], tags[n][0]) for n in range(0, len(tags)))
 
 # dictionary tags -> height in graph
 tags_nr = dict()
-n = 0
-while n < len(tags):
-  tags_nr[tags[n][0]] = 0
-  n = n + 1
+# dictionary tags -> nr nodes in graph
+tag_node_count = dict()
+# dictionary tags -> nr edges in graph
+tag_edge_count = dict()
+# dictionary tags -> nr edges with multiplicity in graph
+tag_total_edge_count = dict()
+# dictionary tags -> nr chapters used
+tag_chapter_count = dict()
+# dictionary tags -> nr sections used
+tag_section_count = dict()
+# dictionary tags -> nr tags using this tag in their proof
+tag_use_count = dict()
+# dictionary tags -> nr tags using this tag indirectly
+tag_indirect_use_count = dict()
+
+for tag, label in tags:
+  tags_nr[tag] = 0
+  tag_node_count[tag] = 0
+  tag_edge_count[tag] = 0
+  tag_total_edge_count[tag] = 0
+  tag_chapter_count[tag] = 0
+  tag_section_count[tag] = 0
+  tag_use_count[tag] = 0
+  tag_indirect_use_count[tag] = 0
 tags_nr['ZZZZ'] = 0
 
 # dictionary tags -> referenced tags
 tags_refs = dict()
-n = 0
-while n < len(tags):
-  tags_refs[tags[n][0]] = []
-  n = n + 1
+for tag, label in tags:
+  tags_refs[tag] = []
 tags_refs['ZZZZ'] = []
 
 ext = ".tex"
@@ -260,18 +278,24 @@ result = {"nodes": [], "links": []}
 mapping = {}
 n = 0
 
-def updateGraph(tag, depth):
+def updateGraph(tag, depth, root_tag):
   global mapping, n, result
 
-  if depth <= result["nodes"][mapping[tag]]["depth"]:
-    return
+  # if we don't need to update depth and we already have the total edge count for tag, then we can finish right away
+  if depth <= result["nodes"][mapping[tag]]["depth"] and tag_node_count[tag] >= 1:
+  	tag_total_edge_count[root_tag] += tag_total_edge_count[tag]
+	return
 
-  result["nodes"][mapping[tag]]["depth"] = depth
+  result["nodes"][mapping[tag]]["depth"] = max(depth, result["nodes"][mapping[tag]]["depth"])
 
   for child in tags_refs[tag]:
-    updateGraph(child, depth + 1)
+    updateGraph(child, depth + 1, root_tag)
 
-def generateGraph(tag, depth = 0):
+    # update statistics
+    tag_total_edge_count[root_tag] += 1
+
+
+def generateGraph(tag, depth, root_tag):
   global mapping, n, result
 
   if tag not in mapping.keys():
@@ -288,13 +312,24 @@ def generateGraph(tag, depth = 0):
        # TODO also chapter name etc, but I don't feel like it right now
       })
 
+    # update statistics
+    tag_node_count[root_tag] += 1
+    tag_indirect_use_count[tag] += 1
+    if depth == 1:
+    	tag_use_count[tag] += 1
+
     for child in tags_refs[tag]:
-      generateGraph(child, depth + 1)
+      generateGraph(child, depth + 1, root_tag)
       result["links"].append({"source": mapping[tag], "target": mapping[child]})
+
+      # update statistics
+      tag_edge_count[root_tag] += 1
+      tag_total_edge_count[root_tag] += 1
+
   else:
     # overwrite depth if necessary
     result["nodes"][mapping[tag]]["depth"] = max(depth, result["nodes"][mapping[tag]]["depth"])
-    updateGraph(tag, depth)
+    updateGraph(tag, depth, root_tag)
 
 
 def generateTree(tag, depth = 0, cutoff = 4):
@@ -355,6 +390,8 @@ def generatePacked(tag):
          "book_id": tagToChapter[child][0],
          "tag": tagToChapter[child][2],
         })
+      # update statistics
+      tag_chapter_count[tag] += 1
 
     if section not in sectionsMapping[chapter]:
       sectionsMapping[chapter][section] = max(sectionsMapping[chapter].values() + [-1]) + 1
@@ -367,6 +404,8 @@ def generatePacked(tag):
          "tag": tagToSection[child][2],
          "children": []
         })
+      # update statistics
+      tag_section_count[tag] += 1
 
     packed["children"][chaptersMapping[chapter]]["children"][sectionsMapping[chapter][section]]["children"].append(
       {"tagName": "", # TODO fix this
@@ -383,16 +422,16 @@ def generatePacked(tag):
 
 # force directed dependency graph
 def generateForceDirectedGraphs():
-  for tag in tags:
+  for tag, label in tags:
     global mapping, n, result
     # clean data
     mapping = {}
     n = 0
     result = {"nodes": [], "links": []}
   
-    f = open(config.website + "/data/" + tag[0] + "-force.json", "w")
-    generateGraph(tag[0])
-    print "generating " + tag[0] + "-force.json, which contains " + str(len(result["nodes"])) + " nodes and " + str(len(result["links"])) + " links"
+    f = open(config.website + "/data/" + tag + "-force.json", "w")
+    generateGraph(tag, 0, tag)
+    print "generating " + tag + "-force.json, which contains " + str(len(result["nodes"])) + " nodes and " + str(len(result["links"])) + " links"
 
     f.write(json.dumps(result, indent = 2))
     f.close()
@@ -415,11 +454,11 @@ def optimizeTree(tag):
       cutoffValue = cutoffValue + 1
 
 def generateClusterGraphs():
-  for tag in tags:
-    f = open(config.website + "/data/" + tag[0] + "-tree.json", "w")
+  for tag, label in tags:
+    f = open(config.website + "/data/" + tag + "-tree.json", "w")
     #result = generateTree(tag[0], cutoff = 3)
-    result = optimizeTree(tag[0])
-    print "generating " + tag[0] + " which contains " + str(countTree(result)) + " nodes"
+    result = optimizeTree(tag)
+    print "generating " + tag + " which contains " + str(countTree(result)) + " nodes"
     f.write(json.dumps(result, indent = 2))
     f.close()
 
@@ -453,10 +492,10 @@ def getChildren(tag):
 
 # packed view with clusters corresponding to parts and chapters
 def generateCollapsibleGraphs():
-  for tag in tags:
-    f = open(config.website + "/data/" + tag[0] + "-packed.json", "w")
-    packed = generatePacked(tag[0])
-    print "generating packed view for " + tag[0]
+  for tag, label in tags:
+    f = open(config.website + "/data/" + tag + "-packed.json", "w")
+    packed = generatePacked(tag)
+    print "generating packed view for " + tag
     f.write(json.dumps(packed, indent = 2))
     f.close()
 
@@ -554,46 +593,44 @@ def scatter():
 
   f.close()
 
-# TODO this is code duplication with statistics/counts.py, but eventually this code should be moved there anyway, then this code becomes something for statistics.general
-def keyExists(key, cursor):
-  try:
-    query = "SELECT COUNT(*) FROM statistics WHERE key = ?"
-    cursor = cursor.execute(query, [key])
 
-    return cursor.fetchone()[0] > 0
+def clearCounts():
+  (connection, cursor) = general.connect()
+
+  try:
+    query = 'DELETE FROM graphs'
+    cursor.execute(query)
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
+
+  general.close(connection)
  
 
-def update(key, value, cursor):
+def update(tag, node_count, edge_count, total_edge_count, chapter_count, section_count, use_count, indirect_use_count, cursor):
   try:
-    if keyExists(key, cursor):
-      query = 'UPDATE statistics SET value = ? WHERE key = ?'
-      cursor.execute(query, [value, key])
-    else:
-      query = 'INSERT INTO statistics (key, value) VALUES (?, ?)'
-      cursor.execute(query, [key, value])
+      query = 'INSERT INTO graphs (tag, node_count, edge_count, total_edge_count, chapter_count, section_count, use_count, indirect_use_count) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+      cursor.execute(query, [tag, node_count, edge_count, total_edge_count, chapter_count, section_count, use_count, indirect_use_count])
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
-  
 
 def updateCounts():
   (connection, cursor) = general.connect()
 
   for tag, label in tags:
-    if tag[3] == "0": connection.commit() # TODO remove this eventually
-    if tag[3] == "0": print "committed"
     print "updating " + tag
-    update(tag + " node count", getNodesCount(tag), cursor)
-    update(tag + " edge count", getEdgesCount(tag), cursor)
-    update(tag + " total edge count", getEdgesCountWithMultiples(tag), cursor)
-    update(tag + " chapter count", getChapterCount(tag), cursor)
-    update(tag + " section count", getSectionCount(tag), cursor)
-    update(tag + " use count", getReferencingTagsCount(tag), cursor)
-    update(tag + " indirect use count", getIndirectReferencingTagsCount(tag), cursor)
+    update(tag, tag_node_count[tag], tag_edge_count[tag], tag_total_edge_count[tag], tag_chapter_count[tag], tag_section_count[tag], tag_use_count[tag], tag_indirect_use_count[tag], cursor)
 
   general.close(connection)
 
 # TODO the folder stacks-website/data should be created
+
+def allAtOnce():
+  generateForceDirectedGraphs()
+  generateClusterGraphs()
+  generateCollapsibleGraphs()
+  clearDependencies()
+  insertDependencies()
+  clearCounts()
+  updateCounts()

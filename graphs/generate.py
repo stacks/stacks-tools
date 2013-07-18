@@ -315,14 +315,14 @@ def generateGraph(tag, depth, root_tag):
     # update statistics
     tag_node_count[root_tag] += 1
     tag_indirect_use_count[tag] += 1
-    if depth == 1:
-    	tag_use_count[tag] += 1
 
     for child in tags_refs[tag]:
       generateGraph(child, depth + 1, root_tag)
       result["links"].append({"source": mapping[tag], "target": mapping[child]})
 
       # update statistics
+      if tag == root_tag:
+        tag_use_count[child] += 1
       tag_edge_count[root_tag] += 1
       tag_total_edge_count[root_tag] += 1
 

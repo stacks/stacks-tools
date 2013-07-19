@@ -308,7 +308,7 @@ def generateGraph(tag, depth, root_tag):
        "type": split_label(tags_labels[tag])[1],
        "tagName": names[tag],
        "book_id": tagToID[tag],
-       "depth": depth
+       "depth": depth,
        # TODO also chapter name etc, but I don't feel like it right now
       })
 
@@ -344,6 +344,7 @@ def generateTree(tag, depth = 0, cutoff = 4):
       "book_id" : tagToID[tag],
       "file" : split_label(tags_labels[tag])[0],
       "tagName": names[tag],
+      "numberOfChildren": tag_node_count[tag]
     }
   else:
     return {
@@ -354,6 +355,7 @@ def generateTree(tag, depth = 0, cutoff = 4):
       "tagName": names[tag],
       "file" : split_label(tags_labels[tag])[0],
       "children": [generateTree(child, depth + 1, cutoff) for child in set(tags_refs[tag])],
+      "numberOfChildren": tag_node_count[tag]
     }
         
 def countTree(tree):
@@ -415,6 +417,7 @@ def generatePacked(tag):
        "book_id": tagToID[child],
        "file" : split_label(tags_labels[child])[0],
        "type": split_label(tags_labels[child])[1],
+       "numberOfChildren": tag_node_count[tag]
       })
 
   return packed
@@ -432,6 +435,8 @@ def generateForceDirectedGraphs():
     f = open(config.website + "/data/" + tag + "-force.json", "w")
     generateGraph(tag, 0, tag)
     print "generating " + tag + "-force.json, which contains " + str(len(result["nodes"])) + " nodes and " + str(len(result["links"])) + " links"
+    for node in result["nodes"]:
+      node["numberOfChildren"] = tag_node_count[node["tag"]]
 
     f.write(json.dumps(result, indent = 2))
     f.close()

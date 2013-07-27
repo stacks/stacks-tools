@@ -1,5 +1,4 @@
 import json, sqlite3
-import time #TODO remove
 from collections import deque, defaultdict
 
 import config, general
@@ -18,6 +17,22 @@ files = list_text_files(path)
 
 labels = []
 tags = get_tags(path)
+
+connection = sqlite3.connect(config.database)
+
+def tagExists(tag):
+  try:
+    query = "SELECT COUNT(tag) FROM tags WHERE tag = :tag"
+    cursor = connection.execute(query, [tag])
+
+    return cursor.fetchone()[0] > 0
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+for tag in tags:
+  if not tagExists(tag[0]):
+    del tags[tag[0]]
 
 # dictionary labels -> tags
 label_tags = dict((tags[n][1], tags[n][0]) for n in range(0, len(tags)))
@@ -121,7 +136,6 @@ for name in files:
 
   tex_file.close()
 
-connection = sqlite3.connect(config.database)
 
 # get names for tags from the database
 names = {}
@@ -298,6 +312,9 @@ def updateGraph(tag, depth, root_tag):
 def generateGraph(tag, depth, root_tag):
   global mapping, n, result
 
+  if tag == "ZZZZ":
+    return
+
   if tag not in mapping.keys():
     mapping[tag] = n
     n = n + 1
@@ -309,6 +326,8 @@ def generateGraph(tag, depth, root_tag):
        "tagName": names[tag],
        "book_id": tagToID[tag],
        "depth": depth,
+       "section": tagToSection[tag][1],
+       "chapter": tagToChapter[tag][1],
        # TODO also chapter name etc, but I don't feel like it right now
       })
 
@@ -344,7 +363,9 @@ def generateTree(tag, depth = 0, cutoff = 4):
       "book_id" : tagToID[tag],
       "file" : split_label(tags_labels[tag])[0],
       "tagName": names[tag],
-      "numberOfChildren": tag_node_count[tag]
+      "numberOfChildren": tag_node_count[tag], # TODO 05T6 has 0 children, which is wrong
+      "section": tagToSection[tag][1],
+      "chapter": tagToChapter[tag][1],
     }
   else:
     return {
@@ -355,7 +376,9 @@ def generateTree(tag, depth = 0, cutoff = 4):
       "tagName": names[tag],
       "file" : split_label(tags_labels[tag])[0],
       "children": [generateTree(child, depth + 1, cutoff) for child in set(tags_refs[tag])],
-      "numberOfChildren": tag_node_count[tag]
+      "numberOfChildren": tag_node_count[tag],
+      "section": tagToSection[tag][1],
+      "chapter": tagToChapter[tag][1],
     }
         
 def countTree(tree):
@@ -417,7 +440,9 @@ def generatePacked(tag):
        "book_id": tagToID[child],
        "file" : split_label(tags_labels[child])[0],
        "type": split_label(tags_labels[child])[1],
-       "numberOfChildren": tag_node_count[tag]
+       "numberOfChildren": tag_node_count[tag],
+       "section": tagToSection[tag][1],
+       "chapter": tagToChapter[tag][1],
       })
 
   return packed

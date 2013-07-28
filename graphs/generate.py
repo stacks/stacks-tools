@@ -30,10 +30,10 @@ def tagExists(tag):
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
-for tag in tags:
-  if not tagExists(tag[0]):
+for tag, label in tags:
+  if not tagExists(tag):
     print tag
-    del tags[tag[0]]
+    del tags[tag]
 
 # dictionary labels -> tags
 label_tags = dict((tags[n][1], tags[n][0]) for n in range(0, len(tags)))

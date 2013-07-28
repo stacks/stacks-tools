@@ -116,17 +116,17 @@ for name in files:
         refs_proof.extend(refs)
       if end_of_proof(line) and not proof_tag == 'ZZZZ':
         refs_proof_set = set(refs_proof)
-        refs_proof_set.discard('ZZZZ')
         refs_proof = list(refs_proof_set)
         nr = -1
         tags_proof = []
         n = 0
         while n < len(refs_proof):
           ref_tag = find_tag(refs_proof[n], label_tags)
-          tags_proof = tags_proof + [ref_tag]
-          nr_ref = tags_nr[ref_tag]
-          if nr_ref > nr:
-            nr = nr_ref
+	  if not ref_tag == 'ZZZZ':
+            tags_proof = tags_proof + [ref_tag]
+            nr_ref = tags_nr[ref_tag]
+            if nr_ref > nr:
+              nr = nr_ref
           n = n + 1
         tags_nr[proof_tag] = nr + 1
         tags_refs[proof_tag] = tags_proof
@@ -137,6 +137,14 @@ for name in files:
       in_proof = beginning_of_proof(line)
 
   tex_file.close()
+
+# From here on ZZZZ should not occur
+#
+# Turn on this function to check for ZZZZ
+def errorZZZZ(tag): pass
+#
+#  if tag == 'ZZZZ':
+#    raise Exception('Encountered ZZZZ')
 
 
 # get names for tags from the database
@@ -314,8 +322,7 @@ def updateGraph(tag, depth, root_tag):
 def generateGraph(tag, depth, root_tag):
   global mapping, n, result
 
-  if tag == "ZZZZ":
-    return
+  errorZZZZ(tag)
 
   if tag not in mapping.keys():
     mapping[tag] = n
@@ -338,8 +345,8 @@ def generateGraph(tag, depth, root_tag):
     tag_indirect_use_count[tag] += 1
 
     for child in tags_refs[tag]:
-      if child == "ZZZZ":
-        continue
+
+      errorZZZZ(tag)
 
       generateGraph(child, depth + 1, root_tag)
       result["links"].append({"source": mapping[tag], "target": mapping[child]})
@@ -357,8 +364,7 @@ def generateGraph(tag, depth, root_tag):
 
 
 def generateTree(tag, depth = 0, cutoff = 4):
-  if tag == "ZZZZ":
-    return
+  errorZZZZ(tag)
   tagType = split_label(tags_labels[tag])[1]
 
   # child node
@@ -411,8 +417,7 @@ def generatePacked(tag):
   chaptersMapping = {}
   sectionsMapping = defaultdict(dict)
   for child in children:
-    if child == "ZZZZ":
-      continue
+    errorZZZZ(child)
 
     chapter = tagToChapter[child][1]
     section = tagToSection[child][1]
@@ -468,13 +473,13 @@ def generatePacked(tag):
 # some of this data is recursively generated
 # hence we make sure that all this data has been collected for all children first
 def generateForceDirectedGraphsRecurse(tag):
+  errorZZZZ(tag)
   # we can check if we've created the graph for a tag by checking if tag_node_count is nonzero
-  if tag == 'ZZZZ' or tag_node_count[tag] > 0:
+  if tag_node_count[tag] > 0:
   	return
 
   for child in tags_refs[tag]:
-    if child == 'ZZZZ':
-    	continue
+    errorZZZZ(tag)
     # we can check if we've created the graph for a tag by checking if tag_node_count is nonzero
     if tag_node_count[child] == 0:
         generateForceDirectedGraphsRecurse(child)

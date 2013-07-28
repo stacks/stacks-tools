@@ -298,7 +298,7 @@ def updateGraph(tag, depth, root_tag):
   global mapping, n, result
 
   # if we don't need to update depth and we already have the total edge count for tag, then we can finish right away
-  if depth <= result["nodes"][mapping[tag]]["depth"] and tag_node_count[tag] >= 1:
+  if depth <= result["nodes"][mapping[tag]]["depth"] and tag_node_count[tag] > 0:
   	tag_total_edge_count[root_tag] += tag_total_edge_count[tag]
 	return
 
@@ -370,7 +370,7 @@ def generateTree(tag, depth = 0, cutoff = 4):
       "book_id" : tagToID[tag],
       "file" : split_label(tags_labels[tag])[0],
       "tagName": names[tag],
-      "numberOfChildren": tag_node_count[tag], # TODO 05T6 has 0 children, which is wrong
+      "numberOfChildren": tag_node_count[tag],
       "section": tagToSection[tag][1],
       "chapter": tagToChapter[tag][1],
     }
@@ -462,22 +462,46 @@ def generatePacked(tag):
 
 
 # force directed dependency graph
+#
+#
+# while generating these graphs we do a great deal of data collection
+# some of this data is recursively generated
+# hence we make sure that all this data has been collected for all children first
+def generateForceDirectedGraphsRecurse(tag):
+  # we can check if we've created the graph for a tag by checking if tag_node_count is nonzero
+  if tag == 'ZZZZ' or tag_node_count[tag] > 0:
+  	return
+
+  for child in tags_refs[tag]:
+    if child == 'ZZZZ':
+    	continue
+    # we can check if we've created the graph for a tag by checking if tag_node_count is nonzero
+    if tag_node_count[child] == 0:
+        generateForceDirectedGraphsRecurse(child)
+
+  global mapping, n, result
+  # clean data
+  mapping = {}
+  n = 0
+  result = {"nodes": [], "links": []}
+
+  f = open(config.website + "/data/" + tag + "-force.json", "w")
+  generateGraph(tag, 0, tag)
+  print "generating " + tag + "-force.json, which contains " + str(len(result["nodes"])) + " nodes and " + str(len(result["links"])) + " links"
+  for node in result["nodes"]:
+    node["numberOfChildren"] = tag_node_count[node["tag"]]
+
+  f.write(json.dumps(result, indent = 2))
+  f.close()
+  if tag_node_count[tag] == 0:
+    print "ERROR"
+    exit(1)
+
+
+# now we actually call the recursive procedure for each tag
 def generateForceDirectedGraphs():
   for tag, label in tags:
-    global mapping, n, result
-    # clean data
-    mapping = {}
-    n = 0
-    result = {"nodes": [], "links": []}
-  
-    f = open(config.website + "/data/" + tag + "-force.json", "w")
-    generateGraph(tag, 0, tag)
-    print "generating " + tag + "-force.json, which contains " + str(len(result["nodes"])) + " nodes and " + str(len(result["links"])) + " links"
-    for node in result["nodes"]:
-      node["numberOfChildren"] = tag_node_count[node["tag"]]
-
-    f.write(json.dumps(result, indent = 2))
-    f.close()
+    generateForceDirectedGraphsRecurse(tag)
 
 # treeview (or clusterview)
 maximum = 150

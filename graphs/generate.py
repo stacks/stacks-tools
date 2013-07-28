@@ -493,10 +493,6 @@ def generateForceDirectedGraphsRecurse(tag):
 
   f.write(json.dumps(result, indent = 2))
   f.close()
-  if tag_node_count[tag] == 0:
-    print "ERROR"
-    exit(1)
-
 
 # now we actually call the recursive procedure for each tag
 def generateForceDirectedGraphs():

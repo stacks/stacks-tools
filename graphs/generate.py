@@ -32,6 +32,7 @@ def tagExists(tag):
 
 for tag in tags:
   if not tagExists(tag[0]):
+    print tag
     del tags[tag[0]]
 
 # dictionary labels -> tags
@@ -336,6 +337,9 @@ def generateGraph(tag, depth, root_tag):
     tag_indirect_use_count[tag] += 1
 
     for child in tags_refs[tag]:
+      if child == "ZZZZ":
+        continue
+
       generateGraph(child, depth + 1, root_tag)
       result["links"].append({"source": mapping[tag], "target": mapping[child]})
 
@@ -352,6 +356,8 @@ def generateGraph(tag, depth, root_tag):
 
 
 def generateTree(tag, depth = 0, cutoff = 4):
+  if tag == "ZZZZ":
+    return
   tagType = split_label(tags_labels[tag])[1]
 
   # child node
@@ -382,6 +388,9 @@ def generateTree(tag, depth = 0, cutoff = 4):
     }
         
 def countTree(tree):
+  if tree == None:
+    return 0
+
   if "children" not in tree.keys():
     return 1
   else:
@@ -401,6 +410,9 @@ def generatePacked(tag):
   chaptersMapping = {}
   sectionsMapping = defaultdict(dict)
   for child in children:
+    if child == "ZZZZ":
+      continue
+
     chapter = tagToChapter[child][1]
     section = tagToSection[child][1]
 
@@ -485,10 +497,13 @@ def optimizeTree(tag):
 
 def generateClusterGraphs():
   for tag, label in tags:
+    if not tagExists(tag):
+      continue
+
     f = open(config.website + "/data/" + tag + "-tree.json", "w")
     #result = generateTree(tag[0], cutoff = 3)
     result = optimizeTree(tag)
-    print "generating " + tag + " which contains " + str(countTree(result)) + " nodes"
+    print "generating " + tag + "-tree.json which contains " + str(countTree(result)) + " nodes"
     f.write(json.dumps(result, indent = 2))
     f.close()
 
@@ -525,7 +540,7 @@ def generateCollapsibleGraphs():
   for tag, label in tags:
     f = open(config.website + "/data/" + tag + "-packed.json", "w")
     packed = generatePacked(tag)
-    print "generating packed view for " + tag
+    print "generating " + tag + "-packed.json"
     f.write(json.dumps(packed, indent = 2))
     f.close()
 

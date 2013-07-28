@@ -131,6 +131,7 @@ for name in files:
         tags_nr[proof_tag] = nr + 1
         tags_refs[proof_tag] = tags_proof
         refs_proof = []
+      if end_of_proof(line):
         in_proof = 0
     else:
       in_proof = beginning_of_proof(line)

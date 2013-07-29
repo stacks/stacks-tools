@@ -359,7 +359,6 @@ def generateGraph(tag, depth, root_tag):
 
   else:
     # overwrite depth if necessary
-    result["nodes"][mapping[tag]]["depth"] = max(depth, result["nodes"][mapping[tag]]["depth"])
     updateGraph(tag, depth, root_tag)
 
 

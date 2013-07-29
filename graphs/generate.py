@@ -458,8 +458,8 @@ def generatePacked(tag):
        "file" : split_label(tags_labels[child])[0],
        "type": split_label(tags_labels[child])[1],
        "numberOfChildren": tag_node_count[child],
-       "section": tagToSection[tag][1],
-       "chapter": tagToChapter[tag][1],
+       "section": tagToSection[child][1],
+       "chapter": tagToChapter[child][1],
       })
 
   return packed

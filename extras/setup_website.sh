@@ -18,9 +18,12 @@ if [ ! $ANTWOORD = 'y' ]; then exit 0; fi
 
 git clone https://github.com/stacks/stacks-website
 
-cd stacks-website/
+cat <<'EOF' > stacks-website/robots.txt
+User-agent: *
+Disallow: /
+EOF
 
-git checkout new
+cd stacks-website/
 
 git submodule init
 

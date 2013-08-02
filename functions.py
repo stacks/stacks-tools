@@ -375,8 +375,7 @@ def split_label(label):
 	type = pieces[1]
 	rest = ""
 	n = 2
-	# Exceptions...
-	# We should automate this...
+	# TODO We should automate this...
 	if name == "more" and type == "algebra":
 		name = "more-algebra"
 		type = pieces[2]
@@ -417,12 +416,12 @@ def split_label(label):
 		name = "spaces-cohomology"
 		type = pieces[2]
 		n = 3
-	if name == "spaces" and type == "divisors":
-		name = "spaces-divisors"
-		type = pieces[2]
-		n = 3
 	if name == "spaces" and type == "limits":
 		name = "spaces-limits"
+		type = pieces[2]
+		n = 3
+	if name == "spaces" and type == "divisors":
+		name = "spaces-divisors"
 		type = pieces[2]
 		n = 3
 	if name == "spaces" and type == "topologies":
@@ -445,10 +444,6 @@ def split_label(label):
 		name = "spaces-over-fields"
 		type = pieces[3]
 		n = 4
-	if name == "formal" and type == "defos":
-		name = "formal-defos"
-		type = pieces[2]
-		n = 3
 	if name == "spaces" and type == "groupoids":
 		name = "spaces-groupoids"
 		type = pieces[2]
@@ -457,12 +452,16 @@ def split_label(label):
 		name = "spaces-more-groupoids"
 		type = pieces[3]
 		n = 4
-	if name == "examples" and type == "stacks":
-		name = "examples-stacks"
-		type = pieces[2]
-		n = 3
 	if name == "groupoids" and type == "quotients":
 		name = "groupoids-quotients"
+		type = pieces[2]
+		n = 3
+	if name == "formal" and type == "defos":
+		name = "formal-defos"
+		type = pieces[2]
+		n = 3
+	if name == "examples" and type == "stacks":
+		name = "examples-stacks"
 		type = pieces[2]
 		n = 3
 	if name == "stacks" and type == "sheaves":
@@ -479,6 +478,10 @@ def split_label(label):
 		n = 3
 	if name == "stacks" and type == "cohomology":
 		name = "stacks-cohomology"
+		type = pieces[2]
+		n = 3
+	if name == "stacks" and type == "perfect":
+		name = "stacks-perfect"
 		type = pieces[2]
 		n = 3
 	if name == "stacks" and type == "introduction":

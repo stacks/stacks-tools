@@ -14,43 +14,6 @@ be wise to:
 
 connection = 0
 
-# Only use this script after running
-#   make tags
-#
-def parse_aux_file(name, path):
-    label_loc = {}
-    aux_file = open(path + "tags/tmp/" + name + ".aux", 'r')
-    for line in aux_file:
-        if line.find("\\newlabel{") < 0:
-            continue
-        
-        n = find_sub_clause(line, 9, "{", "}")
-        short_label = line[10: n]
-
-        if short_label.find("tocindent") == 0:
-            continue
-
-        # Turn short label into full label if necessary
-        if not name == "book":
-            label = name + "-" + short_label
-        else:
-            label = short_label
-        
-        split = split_label(label)
-
-        # Find the current number of the lemma, theorem, etc.
-        m = find_sub_clause(line, n + 2, "{", "}")
-        nr = line[n + 3: m]
-
-        # find the current page number
-        k = find_sub_clause(line, m + 1, "{", "}")
-        page = line[m + 2: k]
-
-        text = cap_type(split[1]) + " " + nr + " on page " + page
-        label_loc[label] = text
-    aux_file.close()
-    return label_loc
-
 # Variable to contain all the texts of labels
 label_texts = {}
 
@@ -81,15 +44,6 @@ label_tags = dict((tags[n][1], tags[n][0]) for n in range(0, len(tags)))
 titles = all_titles(path)
 
 lijstje = list_text_files(path)
-
-# Get locations in chapters
-list_dict = {}
-for name in lijstje:
-    label_loc = parse_aux_file(name, path)
-    list_dict[name] = label_loc
-
-# get locations in book
-label_loc = parse_aux_file("book", path)
 
 # Function to convert refs into links
 def make_links(line, name):
@@ -451,13 +405,6 @@ def importLaTeX():
   while n < len(tags):
     tag = tags[n][0]
     label = tags[n][1]
-    if not label in label_loc:
-      print "Warning: missing location for tag", tag
-      print "and label", label
-      n = n + 1
-      continue
-    split = split_label(label)
-    name = split[0]
   
     text = ''
   

@@ -1,3 +1,4 @@
+import config
 from functions import *
 
 def find_tag(label, label_tags):
@@ -6,7 +7,7 @@ def find_tag(label, label_tags):
 	else:
 		return label_tags[label]
 
-path = get_path()
+path = config.localProject + "/"
 
 labels = []
 

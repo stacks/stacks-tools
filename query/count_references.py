@@ -1,6 +1,7 @@
+import config
 from functions import *
 
-path = get_path()
+path = config.localProject + "/"
 
 lijstje = list_text_files(path)
 # Just pick one input file:
@@ -48,14 +49,14 @@ for name in lijstje:
 			refs_proof.extend(refs)
 			if end_of_proof(line):
 				refs_proof_set = set(refs_proof)
-				refs_proof_set.discard('ZZZZ')
 				refs_proof = list(refs_proof_set)
 				nr = -1
 				tags_proof = []
 				n = 0
 				while n < len(refs_proof):
-					ref_tag = label_tags[refs_proof[n]]
-					tags_nr[ref_tag] = tags_nr[ref_tag] + 1
+					if refs_proof[n] in label_tags:
+						ref_tag = label_tags[refs_proof[n]]
+						tags_nr[ref_tag] = tags_nr[ref_tag] + 1
 					n = n + 1
 				refs_proof = []
 				in_proof = 0

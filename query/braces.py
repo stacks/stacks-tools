@@ -1,13 +1,14 @@
+import config
 from functions import *
 
-path = get_path()
+path = config.localProject + "/"
 
 lijstje = list_text_files(path)
 
 def begin_xymatrix(line):
 	n = line.find("\\xymatrix{")
 	if n > 0:
-		raise Exception('\\begin{verbatim} not at start of line.')
+		raise Exception('\\xymatrix{ not at start of line.')
 	if n == 0:
 		return 1
 	else:
@@ -142,9 +143,6 @@ for name in lijstje:
 			tex_out.write(line)
 			continue
 
-		if line.find('%') >= 0:
-			line = line[0:line.find('%')]
-			line = line + '\\empty'
 		xytext = xytext + " " + line.rstrip()
 		if nr_braces_xymatrix(xytext) == 0:
 			xymatrix = 0

@@ -1,6 +1,7 @@
+import config
 from functions import *
 
-path = get_path()
+path = config.localProject + "/"
 
 lijstje = list_text_files(path)
 

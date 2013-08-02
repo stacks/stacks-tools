@@ -1,22 +1,13 @@
+import config
 from functions import *
 
 # Find location of repository
 from sys import argv
 
-if not len(argv) >= 2:
-	print
-	print "This script at least one argument"
-	print "namely the path to the stacks project directory."
-	print "The other arguments are the stem names of the tex files"
-	print "to which the material got moved."
-	print
-	raise Exception('Wrong arguments')
+path = config.localProject + "/"
 
-path = argv[1]
-path.rstrip("/")
-path = path + "/"
 moved = []
-n = 2
+n = 1
 while n < len(argv):
 	moved.append(argv[n])
 	n = n + 1
@@ -25,6 +16,12 @@ labels = {}
 
 lijstje = list_text_files(path)
 
+print
+print "You can run this script with some arguments which should be the stem"
+print "names of the tex files to which the material got moved."
+print "Or, you can use this script without arguments to see which arguments"
+print "to give it for a second time through."
+print
 print "------------------------------------------------"
 print "Finding labels."
 print

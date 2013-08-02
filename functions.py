@@ -134,21 +134,8 @@ def get_name():
 	name = argv[1]
 	return name
 
-# Find location of repository
-def get_path():
-	from sys import argv
-	if not len(argv) == 2:
-		print
-		print "This script needs exactly one argument"
-		print "namely the path to the stacks project directory"
-		print
-		raise Exception('Wrong arguments')
-	path = argv[1]
-	path.rstrip("/")
-	path = path + "/"
-	return path
-
 # List the stems of the TeX files in the project
+# in the correct order
 def list_text_files(path):
 	Makefile_file = open(path + "Makefile", 'r')
 	for line in Makefile_file:
@@ -312,23 +299,6 @@ def is_title(line):
 		return 0
 	return 1
 
-# Assuming there is a title on the line, find it.
-def find_title(line):
-	n = line.find("\\title{")
-	if n < 0:
-		return ""
-	n = n + 6
-	m = find_sub_clause(line, n, "{", "}")
-	title = line[n + 1 : m]
-	return title
-
-# Check if the line contains a label
-def is_label(env_text):
-	n = env_text.find("\\label{")
-	if n < 0:
-		return 0
-	return 1
-
 # Returns short label. Does not assume there is a label on the line
 def find_label(env_text):
 	n = env_text.find("\\label{")
@@ -338,13 +308,6 @@ def find_label(env_text):
 	m = find_sub_clause(env_text, n, "{", "}")
 	label = env_text[n + 1 : m]
 	return label
-
-# Check if there are references on the line
-def contains_ref(line):
-	n = line.find("\\ref{")
-	if n < 0:
-		return 0
-	return 1
 
 # Returns list of full references on the line
 def find_refs(line, name):
@@ -561,17 +524,6 @@ def check_def_text(def_text):
 		return "Nothing defined in definition."
 	return ""
 
-# Returns list of terms being defined, which are pieces of the form
-#	{\it definition-text}
-def find_defined_terms(def_text):
-	def_terms = []
-	n = def_text.find("{\\it ")
-	while n >= 0:
-		m = find_sub_clause(def_text, n, "{", "}")
-		def_terms.append(def_text[n : m + 1])
-		n = def_text.find("{\\it ", m)
-	return def_terms
-
 # See if ref occurs in list labels
 def check_ref(ref, labels):
 	try:
@@ -660,10 +612,12 @@ def next_tag(tag):
 		i = i - 1
 	return next[0] + next[1] + next[2] + next[3]
 
+# Silly function
 def get_tag_line(line):
 	line = line.rstrip()
 	return line.split(",")
 
+# Get all active tags in the project
 def get_tags(path):
 	tags = []
 	tag_file = open(path + "tags/tags", 'r')
@@ -681,25 +635,6 @@ def new_label(tags, label):
 			new = 0
 		n = n + 1
 	return new
-
-def get_title(path, name):
-	labels = []
-	tex_file = open(path + name + ".tex", 'r')
-	verbatim = 0
-	for line in tex_file:
-		title = find_title(line)
-		if title:
-			break
-	tex_file.close()
-	return title
-
-def all_titles(path):
-	titles = {}
-	lijstje = list_text_files(path)
-	for name in lijstje:
-		extra = get_title(path, name)
-		titles[name] = extra
-	return titles
 
 def get_all_labels(path, name):
 	labels = []
@@ -762,12 +697,4 @@ def write_new_tags(path, new_tags):
 
 def cap_type(type):
 	return type[0].capitalize() + type[1:]
-
-def git_version(path):
-	from subprocess import Popen, PIPE, STDOUT
-	cmd = 'git --git-dir=' + path + '.git log --pretty=format:%h -n1'
-	p = Popen(cmd, shell=True, stdout=PIPE).stdout
-	version = p.read()
-	p.close()
-	return version
 

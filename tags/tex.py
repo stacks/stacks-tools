@@ -41,8 +41,6 @@ path = config.websiteProject + "/"
 tags = get_tags(path)
 label_tags = dict((tags[n][1], tags[n][0]) for n in range(0, len(tags)))
 
-titles = all_titles(path)
-
 lijstje = list_text_files(path)
 
 # Function to convert refs into links

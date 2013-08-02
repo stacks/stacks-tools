@@ -106,7 +106,7 @@ for name in lijstje:
     linenumber_item = [1, 1]
     linenumber_section = [1, 1]
     linenumber_subsection = [1, 1]
-    linenumber_subsubsection = [1, 1] # TODO do these even exist?
+    linenumber_subsubsection = [1, 1]
     linenumber_equation = [1, 1]
 
     for line in tex_file:

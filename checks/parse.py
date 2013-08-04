@@ -30,7 +30,10 @@ for name in lijstje:
 		# Check length of line
 		error_text = length_of_line(line)
 		if error_text:
-			print_error(error_text, line, name, line_nr)
+			if ('\\begin{list}' in line) or ('\\href' in line) or ('\\frac' in line) or ('twocell' in line):
+				print "Warning: long line in " + name + " on line", line_nr
+			else:
+				print_error(error_text, line, name, line_nr)
 
 		# Check for verbatim, because we do not check correctness
 		# inside verbatim environment.

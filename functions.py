@@ -156,9 +156,8 @@ def list_text_files(path):
 
 # Print error
 def print_error(error_text, line, name, line_nr):
-	print "In file " + name + ".tex"
-	print "On line", line_nr
-	print "Line: " + line.rstrip()
+	print "In file " + name + ".tex on line", line_nr
+	print line.rstrip()
 	print "Error: " + error_text
 	print "gvim +{} {}.tex".format(line_nr, name)
 	print

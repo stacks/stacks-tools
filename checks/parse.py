@@ -44,16 +44,16 @@ for name in lijstje:
 			continue
 
 		# These we always want at the start of a line by themselves
-		error_text = only_on_line("\\begin{", 7, line)
+		error_text = only_on_line("\\begin{", 6, line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
-		error_text = only_on_line("\\end{", 5, line)
+		error_text = only_on_line("\\end{", 4, line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
-		error_text = only_on_line("\\label{", 7, line)
+		error_text = only_on_line("\\label{", 6, line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
-		error_text = only_on_line("\\title{", 7, line)
+		error_text = only_on_line("\\title{", 6, line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
 		error_text = beginning_of_line('\\item', line)
@@ -65,13 +65,13 @@ for name in lijstje:
 		error_text = beginning_of_line('\\medskip', line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
-		error_text = beginning_of_line('\\section', line)
+		error_text = only_on_line('\\section{', 8, line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
-		error_text = beginning_of_line('\\subsection', line)
+		error_text = only_on_line('\\subsection{', 11, line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
-		error_text = beginning_of_line('\\subsubsection', line)
+		error_text = only_on_line('\\subsubsection{', 14, line)
 		if error_text:
 			print_error(error_text, line, name, line_nr)
 		error_text = beginning_of_line('\\phantomsection', line)

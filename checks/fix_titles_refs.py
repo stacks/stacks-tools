@@ -13,6 +13,7 @@ short_titles = {'introduction' : 'Introduction',\
 'sheaves' : 'Sheaves,',\
 'sites' : 'Sites,',\
 'stacks' : 'Stacks,',\
+'fields' : 'Fields,',\
 'algebra' : 'Algebra,',\
 'brauer' : 'Brauer Groups,',\
 'homology' : 'Homology,',\

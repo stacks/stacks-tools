@@ -27,6 +27,7 @@ short_titles = {'introduction' : 'Introduction',\
 'cohomology' : 'Cohomology,',\
 'sites-cohomology' : 'Cohomology on Sites,',\
 'dga' : 'Differential Graded Algebra,',\
+'dpa' : 'Divided Power Algebra,',\
 'hypercovering' : 'Hypercoverings,',\
 'schemes' : 'Schemes,',\
 'constructions' : 'Constructions,',\

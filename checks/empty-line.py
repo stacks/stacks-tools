@@ -27,6 +27,7 @@ def previous_should_be_empty(line):
 	for env in list_of_labeled_envs:
 		if env == 'equation': continue
 		if line.find('\\begin{' + env) == 0: return 1
+	if line.find('\\begin{proof') == 0: return 1
 	for part in list_parts:
 		if line.find('\\' + part) == 0: return 1
 	return 0

@@ -1,67 +1,96 @@
 #! /bin/bash
 
+# url of Stacks project website
 LOCALHOST="http://localhost:8080"
-DATABASEDIR="database/stacks.sqlite"
-# The following starts with a / if not empty
+# location stacks-website directory relative to root webserver
+# should start with a / if not empty
 DIRECTORY=""
-PROJECTDIR=$(pwd)"/stacks-website/tex"
+# absolute path to base directory to put website and tools
+CURRENT=$(pwd)
+# website will be placed in CURRENT/STACKSWEB
+STACKSWEB="stacks-website"
+# tools will be placed in CURRENT/STACKSTOOL
+STACKSTOOL="stacks-tools"
+# path to location of stacks project relative to CURRENT
+# default choice is subdirectory 'tex' of website
+PROJECTDIR=$STACKSWEB"/tex"
+# directory in which to place database relative to STACKSWEB
+# default choice is 'database'
+DATABASEDIR="database"
+# name database
+DATABASENAME="stacks.sqlite"
+# directory in which to place graph data
+# default choice is subdirectory 'data' of website
+# TODO This cannot be changed currently DONT CHANGE
+DATADIR=$CURRENT"/"$STACKSWEB"/data"
 
+echo "This script tries to setup the Stacks project website locally"
+echo
 echo "Please check the values of the following variables: "
 echo "LOCALHOST="$LOCALHOST
-echo "DATABASEDIR="$DATABASEDIR
 echo "DIRECTORY="$DIRECTORY
+echo "CURRENT="$CURRENT
+echo "STACKSWEB="$STACKSWEB
+echo "STACKSTOOL="$STACKSTOOL
 echo "PROJECTDIR="$PROJECTDIR
+echo "DATABASEDIR="$DATABASEDIR
+echo "DATABASENAME="$DATABASENAME
+echo "DATADIR="$DATADIR
 echo "Continue (y/n)"
 read ANTWOORD
 if [ ! $ANTWOORD = 'y' ]; then exit 0; fi
 
+set -e
 
-git clone https://github.com/stacks/stacks-website
+mkdir -p $CURRENT
+cd $CURRENT
 
-cat <<'EOF' > stacks-website/robots.txt
+git clone https://github.com/stacks/stacks-website $STACKSWEB
+
+cd $STACKSWEB
+
+cat <<'EOF' > robots.txt
 User-agent: *
 Disallow: /
 EOF
-
-cd stacks-website/
 
 git submodule init
 
 git submodule update
 
-git clone git://github.com/stacks/stacks-project tex
+git clone git://github.com/stacks/stacks-project $CURRENT/$PROJECTDIR
 
-sed -i -e "s@http://stacks.math.columbia.edu/tag/@$LOCALHOST/tag/@" tex/scripts/tag_up.py
+cd $CURRENT/$PROJECTDIR
 
-cd tex
+sed -i -e "s@http://stacks.math.columbia.edu/tag/@$LOCALHOST/tag/@" scripts/tag_up.py
 
 make -j3 tags
 
-cd ../..
+cd $CURRENT
 
-git clone https://github.com/stacks/stacks-tools
+git clone https://github.com/stacks/stacks-tools $STACKSTOOL
 
-cd stacks-tools
+cd $STACKSTOOL
+sed -i -e "s@website =.*@website = \"../$STACKSWEB\"@" config.py
+sed -i -e "s@database =.*@database = \"../$STACKSWEB/$DATABASEDIR/$DATABASENAME\"@" config.py
+sed -i -e "s@websiteProject =.*@websiteProject = \"../$PROJECTDIR\"@" config.py
 
 python create.py
 
-cd ..
+mkdir $CURRENT/$STACKSWEB/$DATABASEDIR
 
-mkdir stacks-website/database
+chmod 0777 $CURRENT/$STACKSWEB/$DATABASEDIR
 
-chmod 0777 stacks-website/database
+mv $CURRENT/$STACKSTOOL/stacks.sqlite $CURRENT/$STACKSWEB/$DATABASEDIR/$DATABASENAME
 
-mv stacks-tools/stacks.sqlite stacks-website/database
+chmod 0777 $CURRENT/$STACKSWEB/$DATABASEDIR/$DATABASENAME
 
-chmod 0777 stacks-website/database/stacks.sqlite
+chmod 0777 $CURRENT/$STACKSWEB/php/cache
 
-chmod 0777 stacks-website/php/cache
-
-sed -i -e "s@database.*=.*@database = \"$DATABASEDIR\"@" stacks-website/config.ini
-sed -i -e "s@directory.*=.*@directory = \"$DIRECTORY\"@" stacks-website/config.ini
-sed -i -e "s@project.*=.*@project = \"$PROJECTDIR\"@" stacks-website/config.ini
-
-cd stacks-website
+cd $CURRENT/$STACKSWEB
+sed -i -e "s@database.*=.*@database = \"$DATABASEDIR/$DATABASENAME\"@" config.ini
+sed -i -e "s@directory.*=.*@directory = \"$DIRECTORY\"@" config.ini
+sed -i -e "s@project.*=.*@project = \"$CURRENT/$PROJECTDIR\"@" config.ini
 
 ln -s ../../../../../css/stacks-editor.css js/EpicEditor/epiceditor/themes/editor/stacks-editor.css
 ln -s ../../../../../css/stacks-preview.css js/EpicEditor/epiceditor/themes/preview/stacks-preview.css
@@ -69,18 +98,16 @@ ln -s ../../../../../css/stacks-preview.css js/EpicEditor/epiceditor/themes/prev
 ln -s ../../../../js/XyJax/extensions/TeX/xypic.js js/MathJax/extensions/TeX/xypic.js
 ln -s ../../../js/XyJax/extensions/fp.js js/MathJax/extensions/fp.js
 
-cd ..
-
-cd stacks-tools
+cd $CURRENT/$STACKSTOOL
 
 python update.py
 
 python macros.py
 
-cd ..
+cd $CURRENT
 
-mkdir stacks-website/data
+mkdir $DATADIR
 
-cd stacks-tools
+cd $STACKSTOOL
 
 python graphs.py

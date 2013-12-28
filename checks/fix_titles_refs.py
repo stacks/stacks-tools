@@ -67,6 +67,7 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-more-groupoids' : 'More on Groupoids in Spaces,',\
 'bootstrap' : 'Bootstrap,',\
 'groupoids-quotients' : 'Quotients of Groupoids,',\
+'spaces-simplicial' : 'Simplicial Spaces,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\
 'cotangent' : 'Cotangent,',\

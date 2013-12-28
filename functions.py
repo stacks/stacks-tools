@@ -418,6 +418,10 @@ def split_label(label):
 		name = "groupoids-quotients"
 		type = pieces[2]
 		n = 3
+	if name == "spaces" and type == "simplicial":
+		name = "spaces-simplicial"
+		type = pieces[2]
+		n = 3
 	if name == "formal" and type == "defos":
 		name = "formal-defos"
 		type = pieces[2]

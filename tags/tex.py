@@ -23,6 +23,9 @@ label_linenumbers = {}
 # Variable to contain all the texts of proofs
 proof_texts = {}
 
+# Variable to contain all the texts of references
+reference_texts = {}
+
 # Helper function
 def assign_label_text(label, text):
     if not label:
@@ -83,6 +86,7 @@ for name in lijstje:
     in_subsection = 0
     in_subsubsection = 0
     in_equation = 0
+    in_reference
     label = ""
     label_env = ""
     label_proof = ""
@@ -91,6 +95,7 @@ for name in lijstje:
     label_subsection = ""
     label_subsubsection = ""
     label_equation = ""
+    label_reference = ""
     text_env = ""
     text_proof = ""
     text_item = ""
@@ -98,6 +103,7 @@ for name in lijstje:
     text_subsection = ""
     text_subsubsection = ""
     text_equation = ""
+    text_reference = ""
 
     linenumber_env = [1, 1]
     linenumber_proof = [1, 1]
@@ -106,6 +112,7 @@ for name in lijstje:
     linenumber_subsection = [1, 1]
     linenumber_subsubsection = [1, 1]
     linenumber_equation = [1, 1]
+    linenumber_reference = [1, 1]
 
     for line in tex_file:
 
@@ -189,6 +196,11 @@ for name in lijstje:
             linenumber_equation[0] = line_nr
             in_equation = 1
 
+        # See if reference starts
+        if line.find('\\begin{reference}' == 0:
+            linenumber_reference[0] = line_nr
+            in_reference = 1
+
         # Find label if there is one
         if line.find('\\label{') == 0:
             label = find_label(line)
@@ -206,6 +218,7 @@ for name in lijstje:
                 label_env = name + '-' + label
                 if label.find('lemma') == 0 or label.find('proposition') == 0 or label.find('theorem') == 0:
                     label_proof = label_env
+                    label_reference = label_env
 
         # Add line to env_text if we are in an environment
         if in_env:
@@ -230,6 +243,9 @@ for name in lijstje:
         # Add line to equation_text if we are in an equation
         if in_equation:
             text_equation = text_equation + make_links(line, name)
+
+        if in_reference:
+            text_reference = text_reference + make_links(line, name)
 
         # Closeout env
         if end_labeled_env(line) and line.find("\\end{equation}") < 0:
@@ -301,6 +317,19 @@ for name in lijstje:
             text_equation = ""
             label_equation = ""
 
+        # Closeout reference
+        if line.find('\\end{equation}') == 0:
+            in_reference = 0
+            linenumber_reference[1] = line_nr
+            # We pick up only the first reference if there are multiple
+            # references
+            if label_reference:
+                if not text_reference:
+                    exit(1)
+                reference_texts[label_reference] = text_reference
+            text_reference = ""
+            label_reference = ""
+
     tex_file.close()
 
 
@@ -368,6 +397,39 @@ def update_text(tag, text):
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
+# Expects a string
+# Returns a list of tuples
+# Each tuple (a, b) represents an occurence \cite[a]{b}
+def get_cites_from_reference(reference):
+  return re.findall(r"\cite\[([\w ]+)\]{([A-Za-z0-9_-]+)}", reference)
+
+def update_reference(tag, reference):
+  # insert the text of the reference in the tags table
+  try:
+    query = 'UPDATE tags SET reference = ? WHERE tag = ?'
+    connection.execute(query, (reference, tag))
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+  # delete all \cite commands (for this tag) from the citations table
+  try:
+    query = 'DELETE FROM citations WHERE tag = ?'
+    connection.execute(query, (tag))
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+  # insert \cite commands in the citations table
+  cites = get_cites_from_reference(reference)
+  for (loc, bibkey) in cites:
+    try:
+      query = 'INSERT INTO citations (tag, bibkey, loc) VALUES (?,?,?)'
+      connection.execute(query, (tag, bibkey, loc))
+
+    except: sqlite3.Error, e:
+      print "An error occured:", e.args[0]
+
 def get_text(tag):
   try:
     query = 'SELECT value FROM tags where tag = ?'
@@ -414,7 +476,7 @@ def importLaTeX():
   
       if label in proof_texts:
         text = text + '\n' + proof_texts[label]
-  
+
     # if text has changed and current text isn't empty (i.e. not a new tag)
     if get_text(tag) != text and get_text(tag) != '':
       print "The text of tag", tag, "has changed",
@@ -425,6 +487,10 @@ def importLaTeX():
         
     # update anyway to fill tags_search which is emptied every time
     update_text(tag, text)
+
+    # if there is a reference, update it
+    if label in reference_texts:
+      update_reference(tag, reference_texts[label])
   
     n = n + 1
 

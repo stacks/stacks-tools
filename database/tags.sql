@@ -1,6 +1,7 @@
 CREATE TABLE "tags" (
   "tag" VARCHAR PRIMARY KEY NOT NULL,
   "label" VARCHAR,
+  "reference" TEXT,
   "file" VARCHAR,
   "chapter_page" INTEGER,
   "book_page" INTEGER,

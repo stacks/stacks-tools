@@ -423,10 +423,10 @@ def update_reference(tag, reference):
 
   # insert \cite commands in the citations table
   cites = get_cites_from_reference(reference)
-  for (loc, bibkey) in cites:
+  for (text, name) in cites:
     try:
-      query = 'INSERT INTO citations (tag, bibkey, loc) VALUES (?,?,?)'
-      connection.execute(query, (tag, bibkey, loc))
+      query = 'INSERT INTO citations (tag, name, text) VALUES (?,?,?)'
+      connection.execute(query, (tag, name, text))
 
     except: sqlite3.Error, e:
       print "An error occured:", e.args[0]

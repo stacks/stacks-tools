@@ -2,6 +2,7 @@ from sys import exit
 import sqlite3
 from functions import *
 import config, general
+import re
 
 """
 This is a modification of the original make_locate.py. It just (ab)uses the

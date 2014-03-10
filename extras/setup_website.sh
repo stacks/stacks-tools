@@ -23,6 +23,8 @@ DATABASENAME="stacks.sqlite"
 # default choice is subdirectory 'data' of website
 # TODO This cannot be changed currently DONT CHANGE
 DATADIR=$CURRENT"/"$STACKSWEB"/data"
+# server from which to clone the stacks repositories
+GITREPO="https://github.com/stacks/"
 
 echo "This script tries to setup the Stacks project website locally"
 echo
@@ -36,6 +38,7 @@ echo "PROJECTDIR="$PROJECTDIR
 echo "DATABASEDIR="$DATABASEDIR
 echo "DATABASENAME="$DATABASENAME
 echo "DATADIR="$DATADIR
+echo "GITREPO="$GITREPO
 echo "Continue (y/n)"
 read ANTWOORD
 if [ ! $ANTWOORD = 'y' ]; then exit 0; fi
@@ -45,7 +48,7 @@ set -e
 mkdir -p $CURRENT
 cd $CURRENT
 
-git clone https://github.com/stacks/stacks-website $STACKSWEB
+git clone ${GITREPO}stacks-website $STACKSWEB
 
 cd $STACKSWEB
 
@@ -58,7 +61,7 @@ git submodule init
 
 git submodule update
 
-git clone git://github.com/stacks/stacks-project $CURRENT/$PROJECTDIR
+git clone ${GITREPO}stacks-project $CURRENT/$PROJECTDIR
 
 cd $CURRENT/$PROJECTDIR
 
@@ -68,7 +71,7 @@ make -j3 tags
 
 cd $CURRENT
 
-git clone https://github.com/stacks/stacks-tools $STACKSTOOL
+git clone ${GITREPO}stacks-tools $STACKSTOOL
 
 cd $STACKSTOOL
 sed -i -e "s@website =.*@website = \"../$STACKSWEB\"@" config.py
@@ -97,6 +100,8 @@ ln -s ../../../../../css/stacks-preview.css js/EpicEditor/epiceditor/themes/prev
 
 ln -s ../../../../js/XyJax/extensions/TeX/xypic.js js/MathJax/extensions/TeX/xypic.js
 ln -s ../../../js/XyJax/extensions/fp.js js/MathJax/extensions/fp.js
+
+sed -i -e "s@._SERVER\\[.*\\]@\"$CURRENT/$STACKSWEB\"@" php/config.php
 
 cd $CURRENT/$STACKSTOOL
 

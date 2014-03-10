@@ -87,7 +87,7 @@ for name in lijstje:
     in_subsection = 0
     in_subsubsection = 0
     in_equation = 0
-    in_reference
+    in_reference = 0
     label = ""
     label_env = ""
     label_proof = ""

@@ -319,7 +319,7 @@ for name in lijstje:
             label_equation = ""
 
         # Closeout reference
-        if line.find('\\end{equation}') == 0:
+        if line.find('\\end{reference}') == 0:
             in_reference = 0
             linenumber_reference[1] = line_nr
             # We pick up only the first reference if there are multiple

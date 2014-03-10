@@ -403,7 +403,7 @@ def update_text(tag, text):
 # Each tuple (a, b) represents an occurence \cite[a]{b}
 def get_cites_from_reference(reference):
   # get list of tuples ('[a]', 'a', 'B') for each \cite[a]{B}
-  l = re.findall(r"\cite(\[([\S ]*)\])?{([A-Za-z0-9_-]+)}", reference)
+  l = re.findall(r"\cite(\[(.*)\])?{(.+)}", reference)
   return [ (b,c) for (a,b,c) in l ]
 
 def update_reference(tag, reference):

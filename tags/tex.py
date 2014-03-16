@@ -198,7 +198,7 @@ for name in lijstje:
             in_equation = 1
 
         # See if reference starts
-        if line.find('\\begin{reference}' == 0:
+        if line.find('\\begin{reference}') == 0:
             linenumber_reference[0] = line_nr
             in_reference = 1
 
@@ -327,7 +327,8 @@ for name in lijstje:
             if label_reference:
                 if not text_reference:
                     exit(1)
-                reference_texts[label_reference] = text_reference
+                # remove \begin and \end
+                reference_texts[label_reference] = "\n".join(text_reference.split("\n")[1:-2])
             text_reference = ""
             label_reference = ""
 
@@ -418,7 +419,7 @@ def update_reference(tag, reference):
   # delete all \cite commands (for this tag) from the citations table
   try:
     query = 'DELETE FROM citations WHERE tag = ?'
-    connection.execute(query, (tag))
+    connection.execute(query, (tag,))
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
@@ -430,7 +431,7 @@ def update_reference(tag, reference):
       query = 'INSERT INTO citations (tag, name, text) VALUES (?,?,?)'
       connection.execute(query, (tag, name, text))
 
-    except: sqlite3.Error, e:
+    except sqlite3.Error, e:
       print "An error occured:", e.args[0]
 
 def get_text(tag):

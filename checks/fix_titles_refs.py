@@ -58,11 +58,11 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-cohomology' : 'Cohomology of Spaces,',\
 'spaces-limits' : 'Limits of Spaces,',\
 'spaces-divisors' : 'Divisors on Spaces,',\
+'spaces-over-fields' : 'Spaces over Fields,',\
 'spaces-topologies' : 'Topologies on Spaces,',\
 'spaces-descent' : 'Descent on Spaces,',\
 'spaces-perfect' : 'Derived Categories of Spaces,',\
 'spaces-more-morphisms' : 'More on Morphisms of Spaces,',\
-'spaces-over-fields' : 'Spaces over Fields,',\
 'spaces-groupoids' : 'Groupoids in Spaces,',\
 'spaces-more-groupoids' : 'More on Groupoids in Spaces,',\
 'bootstrap' : 'Bootstrap,',\

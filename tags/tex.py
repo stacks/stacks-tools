@@ -219,6 +219,7 @@ for name in lijstje:
                 label_env = name + '-' + label
                 if label.find('lemma') == 0 or label.find('proposition') == 0 or label.find('theorem') == 0:
                     label_proof = label_env
+                if any([label.find(env) == 0 for env in list_of_labeled_envs]):
                     label_reference = label_env
 
         # Add line to env_text if we are in an environment

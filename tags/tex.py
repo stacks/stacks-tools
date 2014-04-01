@@ -448,6 +448,19 @@ def get_text(tag):
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
+def get_reference(tag):
+  try:
+    query = 'SELECT reference FROM tags where tag = ?'
+    cursor = connection.execute(query, [tag])
+
+    reference = cursor.fetchone()[0]
+    # if the tag is new the database returns None
+    if reference == None: reference = ''
+    return reference
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
 
 def clearSearchTable():
   (connection, cursor) = general.connect()
@@ -487,8 +500,8 @@ def importLaTeX():
       print "The text of tag", tag, "has changed",
       if label in proof_texts and extract_proofs(get_text(tag)) != extract_proofs(text):
         print "as well as its proof"
-      else:
-        print ""
+      if label in reference_texts and get_reference(tag) != reference_texts[label]:
+        print "as well as its reference"
         
     # update anyway to fill tags_search which is emptied every time
     update_text(tag, text)
@@ -496,6 +509,8 @@ def importLaTeX():
     # if there is a reference, update it
     if label in reference_texts:
       update_reference(tag, reference_texts[label])
+    else:
+      update_reference(tag, "")
   
     n = n + 1
 

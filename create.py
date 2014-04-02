@@ -8,7 +8,7 @@ def execute(filename):
   cursor = connection.cursor()
   cursor.executescript(query)
 
-tables = ["bibliography_items.sql", "bibliography_values.sql", "comments.sql", "dependencies.sql", "macros.sql", "sections.sql", "statistics.sql", "tags.sql", "tags_search.sql", "graphs.sql"]
+tables = ["bibliography_items.sql", "bibliography_values.sql", "citations.sql", "comments.sql", "dependencies.sql", "macros.sql", "sections.sql", "statistics.sql", "tags.sql", "tags_search.sql", "graphs.sql"]
 indices = "indices.sql"
 
 if os.path.isfile("stacks.sqlite"):

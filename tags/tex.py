@@ -2,6 +2,7 @@ from sys import exit
 import sqlite3
 from functions import *
 import config, general
+import re
 
 """
 This is a modification of the original make_locate.py. It just (ab)uses the
@@ -22,6 +23,9 @@ label_linenumbers = {}
 
 # Variable to contain all the texts of proofs
 proof_texts = {}
+
+# Variable to contain all the texts of references
+reference_texts = {}
 
 # Helper function
 def assign_label_text(label, text):
@@ -83,6 +87,7 @@ for name in lijstje:
     in_subsection = 0
     in_subsubsection = 0
     in_equation = 0
+    in_reference = 0
     label = ""
     label_env = ""
     label_proof = ""
@@ -91,6 +96,7 @@ for name in lijstje:
     label_subsection = ""
     label_subsubsection = ""
     label_equation = ""
+    label_reference = ""
     text_env = ""
     text_proof = ""
     text_item = ""
@@ -98,6 +104,7 @@ for name in lijstje:
     text_subsection = ""
     text_subsubsection = ""
     text_equation = ""
+    text_reference = ""
 
     linenumber_env = [1, 1]
     linenumber_proof = [1, 1]
@@ -106,6 +113,7 @@ for name in lijstje:
     linenumber_subsection = [1, 1]
     linenumber_subsubsection = [1, 1]
     linenumber_equation = [1, 1]
+    linenumber_reference = [1, 1]
 
     for line in tex_file:
 
@@ -189,6 +197,11 @@ for name in lijstje:
             linenumber_equation[0] = line_nr
             in_equation = 1
 
+        # See if reference starts
+        if line.find('\\begin{reference}') == 0:
+            linenumber_reference[0] = line_nr
+            in_reference = 1
+
         # Find label if there is one
         if line.find('\\label{') == 0:
             label = find_label(line)
@@ -206,6 +219,8 @@ for name in lijstje:
                 label_env = name + '-' + label
                 if label.find('lemma') == 0 or label.find('proposition') == 0 or label.find('theorem') == 0:
                     label_proof = label_env
+                if any([label.find(env) == 0 for env in list_of_labeled_envs]):
+                    label_reference = label_env
 
         # Add line to env_text if we are in an environment
         if in_env:
@@ -230,6 +245,9 @@ for name in lijstje:
         # Add line to equation_text if we are in an equation
         if in_equation:
             text_equation = text_equation + make_links(line, name)
+
+        if in_reference:
+            text_reference = text_reference + make_links(line, name)
 
         # Closeout env
         if end_labeled_env(line) and line.find("\\end{equation}") < 0:
@@ -301,6 +319,20 @@ for name in lijstje:
             text_equation = ""
             label_equation = ""
 
+        # Closeout reference
+        if line.find('\\end{reference}') == 0:
+            in_reference = 0
+            linenumber_reference[1] = line_nr
+            # We pick up only the first reference if there are multiple
+            # references
+            if label_reference:
+                if not text_reference:
+                    exit(1)
+                # remove \begin and \end
+                reference_texts[label_reference] = "\n".join(text_reference.split("\n")[1:-2])
+            text_reference = ""
+            label_reference = ""
+
     tex_file.close()
 
 
@@ -368,6 +400,41 @@ def update_text(tag, text):
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
+# Expects a string
+# Returns a list of tuples
+# Each tuple (a, b) represents an occurence \cite[a]{b}
+def get_cites_from_reference(reference):
+  # get list of tuples ('[a]', 'a', 'B') for each \cite[a]{B}
+  l = re.findall(r"\cite(\[([^]]*)\])?{([^}]+)}", reference)
+  return [ (b,c) for (a,b,c) in l ]
+
+def update_reference(tag, reference):
+  # insert the text of the reference in the tags table
+  try:
+    query = 'UPDATE tags SET reference = ? WHERE tag = ?'
+    connection.execute(query, (reference, tag))
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+  # delete all \cite commands (for this tag) from the citations table
+  try:
+    query = 'DELETE FROM citations WHERE tag = ?'
+    connection.execute(query, (tag,))
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+  # insert \cite commands in the citations table
+  cites = get_cites_from_reference(reference)
+  for (text, name) in cites:
+    try:
+      query = 'INSERT INTO citations (tag, name, text) VALUES (?,?,?)'
+      connection.execute(query, (tag, name, text))
+
+    except sqlite3.Error, e:
+      print "An error occured:", e.args[0]
+
 def get_text(tag):
   try:
     query = 'SELECT value FROM tags where tag = ?'
@@ -377,6 +444,19 @@ def get_text(tag):
     # if the tag is new the database returns None
     if value == None: value = ''
     return value
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+def get_reference(tag):
+  try:
+    query = 'SELECT reference FROM tags where tag = ?'
+    cursor = connection.execute(query, [tag])
+
+    reference = cursor.fetchone()[0]
+    # if the tag is new the database returns None
+    if reference == None: reference = ''
+    return reference
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
@@ -414,17 +494,23 @@ def importLaTeX():
   
       if label in proof_texts:
         text = text + '\n' + proof_texts[label]
-  
+
     # if text has changed and current text isn't empty (i.e. not a new tag)
     if get_text(tag) != text and get_text(tag) != '':
       print "The text of tag", tag, "has changed",
       if label in proof_texts and extract_proofs(get_text(tag)) != extract_proofs(text):
         print "as well as its proof"
-      else:
-        print ""
+      if label in reference_texts and get_reference(tag) != reference_texts[label]:
+        print "as well as its reference"
         
     # update anyway to fill tags_search which is emptied every time
     update_text(tag, text)
+
+    # if there is a reference, update it
+    if label in reference_texts:
+      update_reference(tag, reference_texts[label])
+    else:
+      update_reference(tag, "")
   
     n = n + 1
 

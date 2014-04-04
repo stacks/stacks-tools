@@ -499,9 +499,10 @@ def importLaTeX():
     if get_text(tag) != text and get_text(tag) != '':
       print "The text of tag", tag, "has changed",
       if label in proof_texts and extract_proofs(get_text(tag)) != extract_proofs(text):
-        print "as well as its proof"
+        print "as well as its proof",
       if label in reference_texts and get_reference(tag) != reference_texts[label]:
-        print "as well as its reference"
+        print "as well as its reference",
+      print ""
         
     # update anyway to fill tags_search which is emptied every time
     update_text(tag, text)

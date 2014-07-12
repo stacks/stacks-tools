@@ -422,6 +422,10 @@ def split_label(label):
 		name = "spaces-simplicial"
 		type = pieces[2]
 		n = 3
+	if name == "formal" and type == "spaces":
+		name = "formal-spaces"
+		type = pieces[2]
+		n = 3
 	if name == "formal" and type == "defos":
 		name = "formal-defos"
 		type = pieces[2]

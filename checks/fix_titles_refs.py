@@ -68,6 +68,7 @@ short_titles = {'introduction' : 'Introduction',\
 'bootstrap' : 'Bootstrap,',\
 'groupoids-quotients' : 'Quotients of Groupoids,',\
 'spaces-simplicial' : 'Simplicial Spaces,',\
+'formal-spaces' : 'Formal Spaces,',\
 'resolve' : 'Resolution of Surfaces,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\

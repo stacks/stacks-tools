@@ -63,6 +63,7 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-descent' : 'Descent on Spaces,',\
 'spaces-perfect' : 'Derived Categories of Spaces,',\
 'spaces-more-morphisms' : 'More on Morphisms of Spaces,',\
+'spaces-pushouts' : 'Pushouts of Spaces,',\
 'spaces-groupoids' : 'Groupoids in Spaces,',\
 'spaces-more-groupoids' : 'More on Groupoids in Spaces,',\
 'bootstrap' : 'Bootstrap,',\

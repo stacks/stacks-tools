@@ -406,6 +406,10 @@ def split_label(label):
 		name = "spaces-more-morphisms"
 		type = pieces[3]
 		n = 4
+        if name == "spaces" and type == "pushouts":
+                name = "spaces-pushouts"
+                type = pieces[2]
+                n = 3
 	if name == "spaces" and type == "groupoids":
 		name = "spaces-groupoids"
 		type = pieces[2]

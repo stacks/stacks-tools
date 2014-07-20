@@ -269,14 +269,13 @@ def rest_clauses(text, spot):
 
 # Check if the pattern starts the line and has only clauses following...
 def only_on_line(pattern, spot, line):
-	line = line.rstrip()
 	n = line.find(pattern)
 	if n > 0:
 		return "Pattern: " + pattern + "not at the start of the line."
 	if n == 0:
 		m = find_sub_clause(line, spot, "{", "}")
 		m = rest_clauses(line, m)
-		if not m + 1 == len(line):
+		if not m + 2 == len(line):
 			return "Pattern: " + pattern + "*} not by itself."
 	return ""
 
@@ -287,8 +286,7 @@ def check_double_dollar(line):
 		return ""
 	if n > 0:
 		return "Double dollar not at start of line."
-	line = line.rstrip()
-	if not len(line) == 2:
+	if not len(line) == 3:
 		return "Double dollar not by itself on line."
 
 # Check if the line contains the title of the document

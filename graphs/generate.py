@@ -253,12 +253,14 @@ def mapTagToSectionAndChapter(tag, label):
   if tagType != "item":
     ID = tagToID[tag]
     sectionID = ".".join(ID.split(".")[0:2])
-    tagToSection[tag] = sections[sectionID]
+    if sectionID in sections:
+      tagToSection[tag] = sections[sectionID]
   else:
     containingTag = getContainingTag(getPosition(tag)) # we have to use the tag that contains this item
     ID = tagToID[containingTag]
     sectionID = ".".join(ID.split(".")[0:2])
-    tagToSection[tag] = sections[sectionID]
+    if sectionID in sections:
+      tagToSection[tag] = sections[sectionID]
 
 
 def mapTags():
@@ -324,6 +326,10 @@ def generateGraph(tag, depth, root_tag):
 
   errorZZZZ(tag)
 
+  # this tag does not yet belong to a well-defined section
+  if tag not in tagToSection:
+    return
+
   if tag not in mapping.keys():
     mapping[tag] = n
     n = n + 1
@@ -349,7 +355,8 @@ def generateGraph(tag, depth, root_tag):
       errorZZZZ(tag)
 
       generateGraph(child, depth + 1, root_tag)
-      result["links"].append({"source": mapping[tag], "target": mapping[child]})
+      if tag in mapping and child in mapping:
+        result["links"].append({"source": mapping[tag], "target": mapping[child]})
 
       # update statistics
       if tag == root_tag:
@@ -365,6 +372,10 @@ def generateGraph(tag, depth, root_tag):
 def generateTree(tag, depth = 0, cutoff = 4):
   errorZZZZ(tag)
   tagType = split_label(tags_labels[tag])[1]
+
+  # not yet assigned
+  if tag not in tagToSection:
+    return
 
   # child node
   if tags_refs[tag] == [] or depth == cutoff:
@@ -417,6 +428,10 @@ def generatePacked(tag):
   sectionsMapping = defaultdict(dict)
   for child in children:
     errorZZZZ(child)
+
+    # not yet there
+    if child not in tagToSection:
+      continue
 
     chapter = tagToChapter[child][1]
     section = tagToSection[child][1]

@@ -6,7 +6,7 @@ import os.path, sqlite3, sys
 def execute(filename):
   query = open("database/" + filename, "r").read()
   cursor = connection.cursor()
-  cursor.execute(query)
+  cursor.executescript(query)
 
 tables = ["bibliography_items.sql", "bibliography_values.sql", "citations.sql", "comments.sql", "dependencies.sql", "macros.sql", "sections.sql", "statistics.sql", "tags.sql", "tags_search.sql", "graphs.sql", "slogans.sql"]
 indices = "indices.sql"

@@ -109,7 +109,7 @@ def parse_aux(filename):
 
   return labels
 
-list_of_standard_envs = ['abstract', 'verbatim', 'quote', 'itemize', 'list', 'center', 'eqnarray*', 'eqnarray', 'align', 'align*', 'document', 'enumerate', 'proof', 'matrix', 'lemma', 'proposition', 'theorem', 'remark', 'remarks', 'example', 'exercise', 'situation', 'equation', 'definition', 'item']
+list_of_standard_envs = ['abstract', 'verbatim', 'quote', 'itemize', 'list', 'center', 'eqnarray*', 'eqnarray', 'align', 'align*', 'document', 'enumerate', 'proof', 'matrix', 'lemma', 'proposition', 'theorem', 'remark', 'remarks', 'example', 'exercise', 'situation', 'equation', 'definition', 'item', 'reference', 'slogan', 'histrmk']
 
 # We also have labels for
 #	'section', 'subsection', 'subsubsection' (every one of these has a label)
@@ -386,6 +386,10 @@ def split_label(label):
 		name = "spaces-divisors"
 		type = pieces[2]
 		n = 3
+	if name == "spaces" and type == "over" and pieces[2] == "fields":
+		name = "spaces-over-fields"
+		type = pieces[3]
+		n = 4
 	if name == "spaces" and type == "topologies":
 		name = "spaces-topologies"
 		type = pieces[2]
@@ -400,10 +404,6 @@ def split_label(label):
 		n = 3
 	if name == "spaces" and type == "more" and pieces[2] == "morphisms":
 		name = "spaces-more-morphisms"
-		type = pieces[3]
-		n = 4
-	if name == "spaces" and type == "over" and pieces[2] == "fields":
-		name = "spaces-over-fields"
 		type = pieces[3]
 		n = 4
 	if name == "spaces" and type == "groupoids":

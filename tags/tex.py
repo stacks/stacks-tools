@@ -31,7 +31,7 @@ reference_texts = {}
 slogan_texts = {}
 
 # Variable to contain all the texts of historical remarks
-histrmk_texts = {}
+history_texts = {}
 
 # Helper function
 def assign_label_text(label, text):
@@ -95,7 +95,7 @@ for name in lijstje:
     in_equation = 0
     in_reference = 0
     in_slogan = 0
-    in_histrmk = 0
+    in_history = 0
     label = ""
     label_env = ""
     label_proof = ""
@@ -106,7 +106,7 @@ for name in lijstje:
     label_equation = ""
     label_reference = ""
     label_slogan = ""
-    label_histrmk = ""
+    label_history = ""
     text_env = ""
     text_proof = ""
     text_item = ""
@@ -116,7 +116,7 @@ for name in lijstje:
     text_equation = ""
     text_reference = ""
     text_slogan = ""
-    text_histrmk = ""
+    text_history = ""
 
     linenumber_env = [1, 1]
     linenumber_proof = [1, 1]
@@ -127,7 +127,7 @@ for name in lijstje:
     linenumber_equation = [1, 1]
     linenumber_reference = [1, 1]
     linenumber_slogan = [1, 1]
-    linenumber_histrmk = [1, 1]
+    linenumber_history = [1, 1]
 
     for line in tex_file:
 
@@ -222,9 +222,9 @@ for name in lijstje:
             in_slogan = 1
 
         # See if historical remark starts
-        if line.find('\\begin{histrmk}') == 0:
-            linenumber_histrmk[0] = line_nr
-            in_histrmk = 1
+        if line.find('\\begin{history}') == 0:
+            linenumber_history[0] = line_nr
+            in_history = 1
 
         # Find label if there is one
         if line.find('\\label{') == 0:
@@ -246,7 +246,7 @@ for name in lijstje:
                 if any([label.find(env) == 0 for env in list_of_labeled_envs]):
                     label_reference = label_env
                     label_slogan = label_env
-                    label_histrmk = label_env
+                    label_history = label_env
 
         # Add line to env_text if we are in an environment
         if in_env:
@@ -280,9 +280,9 @@ for name in lijstje:
         if in_slogan:
             text_slogan = text_slogan + make_links(line, name)
 
-        # Add line to histrmk_text if we are in a historical remark
-        if in_histrmk:
-            text_histrmk = text_histrmk + make_links(line, name)
+        # Add line to history_text if we are in a historical remark
+        if in_history:
+            text_history = text_history + make_links(line, name)
 
         # Closeout env
         if end_labeled_env(line) and line.find("\\end{equation}") < 0:
@@ -384,18 +384,18 @@ for name in lijstje:
             label_slogan = ""
 
         # Closeout historical remark
-        if line.find('\\end{histrmk}') == 0:
-            in_histrmk = 0
-            linenumber_histrmk[1] = line_nr
+        if line.find('\\end{history}') == 0:
+            in_history = 0
+            linenumber_history[1] = line_nr
             # We pick up only the first historical remark if there are multiple
             # historical remarks
-            if label_histrmk:
-                if not text_histrmk:
+            if label_history:
+                if not text_history:
                     exit(1)
                 # remove \begin and \end
-                histrmk_texts[label_histrmk] = "\n".join(text_histrmk.split("\n")[1:-2])
-            text_histrmk = ""
-            label_histrmk = ""
+                history_texts[label_history] = "\n".join(text_history.split("\n")[1:-2])
+            text_history = ""
+            label_history = ""
 
     tex_file.close()
 
@@ -508,11 +508,11 @@ def update_slogan(tag, slogan):
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
-def update_histrmk(tag, histrmk):
+def update_history(tag, history):
   # insert the text of the historical remark in the tags table
   try:
-    query = 'UPDATE tags SET histrmk = ? WHERE tag = ?'
-    connection.execute(query, (histrmk, tag))
+    query = 'UPDATE tags SET history = ? WHERE tag = ?'
+    connection.execute(query, (history, tag))
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
@@ -557,15 +557,15 @@ def get_slogan(tag):
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
 
-def get_histrmk(tag):
+def get_history(tag):
   try:
-    query = 'SELECT histrmk FROM tags where tag = ?'
+    query = 'SELECT history FROM tags where tag = ?'
     cursor = connection.execute(query, [tag])
 
-    histrmk = cursor.fetchone()[0]
+    history = cursor.fetchone()[0]
     # if the tag is new the database returns None
-    if histrmk == None: histrmk = ''
-    return histrmk
+    if history == None: history = ''
+    return history
 
   except sqlite3.Error, e:
     print "An error occurred:", e.args[0]
@@ -613,7 +613,7 @@ def importLaTeX():
         print "as well as its reference",
       if label in slogan_texts and get_slogan(tag) != slogan_texts[label]:
         print "as well as its slogan",
-      if label in histrmk_texts and get_histrmk(tag) != histrmk_texts[label]:
+      if label in history_texts and get_history(tag) != history_texts[label]:
         print "as well as its historical remark",
       print ""
         
@@ -633,10 +633,10 @@ def importLaTeX():
       update_slogan(tag, "")
   
     # if there is a historical remark, update it
-    if label in histrmk_texts:
-      update_histrmk(tag, histrmk_texts[label])
+    if label in history_texts:
+      update_history(tag, history_texts[label])
     else:
-      update_histrmk(tag, "")
+      update_history(tag, "")
   
     n = n + 1
 

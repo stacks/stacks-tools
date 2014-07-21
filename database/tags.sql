@@ -3,7 +3,7 @@ CREATE TABLE "tags" (
   "label" VARCHAR,
   "reference" TEXT,
   "slogan" TEXT,
-  "histrmk" TEXT,
+  "history" TEXT,
   "file" VARCHAR,
   "chapter_page" INTEGER,
   "book_page" INTEGER,

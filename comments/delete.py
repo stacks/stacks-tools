@@ -54,7 +54,9 @@ if not commentExists(ID):
   print 'There is no such comment in the database'
 else:
   comment = getComment(ID)
-  choice = raw_input('Are you sure you wish to remove this comment by ' + comment[1] + ' on tag ' + comment[3] + '? (Y/N): ')
+  author = comment[1].encode('ascii', 'ignore')
+  tag = comment[3].encode('ascii', 'ignore')
+  choice = raw_input('Are you sure you wish to remove this comment by ' + author + ' on tag ' + tag + '? (Y/N): ')
   if string.upper(choice) == 'Y':
     deleteComment(ID)
     print 'Comment removed!'

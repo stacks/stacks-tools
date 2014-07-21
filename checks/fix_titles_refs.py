@@ -63,11 +63,14 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-descent' : 'Descent on Spaces,',\
 'spaces-perfect' : 'Derived Categories of Spaces,',\
 'spaces-more-morphisms' : 'More on Morphisms of Spaces,',\
+'spaces-pushouts' : 'Pushouts of Spaces,',\
 'spaces-groupoids' : 'Groupoids in Spaces,',\
 'spaces-more-groupoids' : 'More on Groupoids in Spaces,',\
 'bootstrap' : 'Bootstrap,',\
 'groupoids-quotients' : 'Quotients of Groupoids,',\
 'spaces-simplicial' : 'Simplicial Spaces,',\
+'formal-spaces' : 'Formal Spaces,',\
+'resolve' : 'Resolution of Surfaces,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\
 'cotangent' : 'Cotangent,',\

@@ -297,13 +297,15 @@ for name in lijstje:
         # Closeout proof
         if end_of_proof(line):
             in_proof = 0
-            # We pick up only the first proof if there are multiple proofs
             if label_proof:
                 if not text_proof:
                     exit(1)
-                proof_texts[label_proof] = text_proof
+                if label_proof not in proof_texts:
+                    proof_texts[label_proof] = ""
+                # we append multiple proofs
+                proof_texts[label_proof] = proof_texts[label_proof] + text_proof
             text_proof = ""
-            label_proof = ""
+            # we don't empty out the label_proof variable
 
         # Closeout item
         if line.find('\\end{enumerate}') == 0 or line.find('\\end{itemize}') == 0 or line.find('\\end{list}') == 0:

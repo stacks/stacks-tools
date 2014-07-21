@@ -4,5 +4,6 @@ CREATE TABLE "slogans" (
   "tag" VARCHAR NOT NULL,
   "author" VARCHAR NOT NULL,
   "email" VARCHAR NOT NULL,
+  "site" VARCHAR NOT NULL,
   "date" DATETIME DEFAULT CURRENT_TIMESTAMP
 );

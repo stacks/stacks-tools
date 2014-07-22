@@ -98,8 +98,7 @@ sed -i -e "s@project.*=.*@project = \"$CURRENT/$PROJECTDIR\"@" config.ini
 ln -s ../../../../../css/stacks-editor.css js/EpicEditor/epiceditor/themes/editor/stacks-editor.css
 ln -s ../../../../../css/stacks-preview.css js/EpicEditor/epiceditor/themes/preview/stacks-preview.css
 
-ln -s ../../../../js/XyJax/extensions/TeX/xypic.js js/MathJax/extensions/TeX/xypic.js
-ln -s ../../../js/XyJax/extensions/fp.js js/MathJax/extensions/fp.js
+sed -i -e "s@MathJax.Ajax.loadComplete(\"\[MathJax\]/extensions/TeX/xypic.js\");@MathJax.Ajax.loadComplete(\"/js/XyJax/extensions/TeX/xypic.js\");@" js/XyJax/extensions/TeX/xypic.js
 
 sed -i -e "s@._SERVER\\[.*\\]@\"$CURRENT/$STACKSWEB\"@" php/config.php
 

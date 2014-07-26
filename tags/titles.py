@@ -61,9 +61,6 @@ def importTitles():
 
   print 'Inserting the information into the database'
   for section in sections:
-    # the bibliography doesn't correspond to a file, we can safely ignore it
-    if section[2] == 'Bibliography':
-      continue
 
     insert_title(section[1], section[2], find_file_for_section(titles, sections, section[1]))
 

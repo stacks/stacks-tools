@@ -50,6 +50,8 @@ def find_file_for_section(titles, sections, number):
         return find_file_for_section(titles, sections, '.'.join(number.split('.')[0:-1]))
 
 # get the information from a \contentsline macro in a .toc file
+# This function should return
+# [type, number, title, page number]
 def parse_contentsline(contentsline):
   parts = contentsline.split('}{')
 
@@ -58,7 +60,15 @@ def parse_contentsline(contentsline):
   # remove clutter
   parts = map(lambda part: part.strip('{}'), parts)
 
-  # TODO document results
+  # currently the last part of a contents line for the bibliopgraphy
+  # looks like 'chapter*.89}\n' and hence the following works for now
+  if parts[3] == 'Bibliography':
+    number = ''
+    for i in parts[5]:
+        if i.isdigit():
+            number += i
+    return [parts[0], number, parts[3], parts[4]]
+
   return [parts[0], parts[2], parts[3], parts[4]]
 
 # read and extract all information from a .toc file

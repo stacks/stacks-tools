@@ -23,12 +23,11 @@ def check_at(line, nr):
                         n = len(type)
 	if not ok:
 		print_error_bib('type not ok', line, nr)
-
-	ref = line[n + 2 : -2]
-        if ref.find(',') >= 0:
-		print_error_bib('extra character', line, nr)
-
-	references.append(ref)
+	else:
+		ref = line[n + 2 : -2]
+		if ref.find(',') >= 0:
+			print_error_bib('extra character', line, nr)
+		references.append(ref)
 
 
 keys = {'AUTHOR', 'TITLE', 'JOURNAL', 'FJOURNAL', 'SHORTJOURNAL', 'VOLUME', 'YEAR', 'NUMBER', 'PAGES', 'EPRINT', 'EPRINTTYPE', 'PUBLISHER', 'URL', 'SERIES', 'ADDRESS', 'CODEN', 'ISSN', 'NOTE', 'HOWPUBLISHED', 'EDITOR', 'CITY', 'ISBN', 'EDITION', 'CHAPTER', 'MONTH'}

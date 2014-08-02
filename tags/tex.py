@@ -229,6 +229,11 @@ for name in lijstje:
         # Find label if there is one
         if line.find('\\label{') == 0:
             label = find_label(line)
+            # If we enter a new labeled environment or a new part, then
+            # the next proof is likely not a proof of the previous
+            # lemma, proposition, or theorem
+            if not (label.find('item') == 0 or label.find('equation') == 0):
+                label_proof = ""
             if label.find('item') == 0:
                 label_item = name + '-' + label
             elif label.find('section') == 0:
@@ -301,11 +306,12 @@ for name in lijstje:
                 if not text_proof:
                     exit(1)
                 if label_proof not in proof_texts:
-                    proof_texts[label_proof] = ""
-                # we append multiple proofs
-                proof_texts[label_proof] = proof_texts[label_proof] + text_proof
+                    proof_texts[label_proof] = text_proof
+                else:
+                    # we append multiple proofs
+                    proof_texts[label_proof] = proof_texts[label_proof] + "\n" + text_proof
             text_proof = ""
-            # we don't empty out the label_proof variable
+            # we don't empty out the label_proof variable; this is done when we enter a new environment above
 
         # Closeout item
         if line.find('\\end{enumerate}') == 0 or line.find('\\end{itemize}') == 0 or line.find('\\end{list}') == 0:

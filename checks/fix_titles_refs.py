@@ -70,6 +70,7 @@ short_titles = {'introduction' : 'Introduction',\
 'groupoids-quotients' : 'Quotients of Groupoids,',\
 'spaces-simplicial' : 'Simplicial Spaces,',\
 'formal-spaces' : 'Formal Spaces,',\
+'restricted' : 'Restricted Power Series,',\
 'resolve' : 'Resolution of Surfaces,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\

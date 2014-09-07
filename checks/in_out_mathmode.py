@@ -54,14 +54,230 @@ def command_allowed_outside_math_mode(line, n):
 			return 1
 	return 0
 
+
+specials = [\
+'\\{',\
+'\\}',\
+'\\ ',\
+'\\choose ',\
+'\\widehat{',\
+'\\widetilde{',\
+'\\phantom{',\
+'\\fbox{',\
+'\\mod ',\
+'\\bmod ',\
+'\\gcd(',\
+'\\check{H}',\
+'\\check{\mathcal{C}}',\
+'\\check H',\
+'\\ref{',\
+'\\frac{',\
+'\\overset{',\
+'\\sqrt{',\
+'\\stackrel{',\
+'\\textstyle{',\
+'\\binom{',\
+'\\xrightarrow{',\
+'\\xleftarrow{',\
+'\\vcenter{',\
+'\\xymatrix{',\
+'\\xymatrix@',\
+'\\label{equation-']
+
+commands_in_math_mode = [\
+'\\nonumber',\
+'\\partial',\
+'\\!',\
+'\\#',\
+'\\sharp',\
+'\\bullet',\
+'\\prime',\
+'\\text',\
+'\\textit',\
+'\\mathcal',\
+'\\mathbf',\
+'\\mathfrak',\
+'\\mathit',\
+'\\bar',\
+'\\overline',\
+'\\underline',\
+'\\ldots',\
+'\\cdot',\
+'\\circ',\
+'\\star',\
+'\\diamond',\
+'\\ast',\
+'\\ell',\
+'\\times',\
+'\\otimes',\
+'\\wedge',\
+'\\vee',\
+'\\pm',\
+'\\lfloor',\
+'\\rfloor',\
+'\\lceil',\
+'\\rceil',\
+'\\langle',\
+'\\rangle',\
+'\\hat',\
+'\\tilde',\
+'\\cup',\
+'\\bigcup',\
+'\\cap',\
+'\\bigcap',\
+'\\setminus',\
+'\\mid',\
+'\\sum',\
+'\\quad',\
+'\\prod',\
+'\\coprod',\
+'\\nolimits',\
+'\\limits',\
+'\\subset',\
+'\\supset',\
+'\\in',\
+'\\notin',\
+'\\to',\
+'\\leadsto',\
+'\\mapsto',\
+'\\uparrow',\
+'\\downarrow',\
+'\\Leftrightarrow',\
+'\\leftrightarrow',\
+'\\longleftrightarrow',\
+'\\leftarrow',\
+'\\Leftarrow',\
+'\\hookrightarrow',\
+'\\rightarrow',\
+'\\Rightarrow',\
+'\\longrightarrow',\
+'\\longmapsto',\
+'\\begin{matrix}',\
+'\\end{matrix}',\
+'\\rtwocell',\
+'\\rruppertwocell',\
+'\\rrlowertwocell',\
+'\\rrtwocell',\
+'\\ll',\
+'\\gg',\
+'\\ge',\
+'\\geq',\
+'\\le',\
+'\\leq',\
+'\\not',\
+'\\neq',\
+'\\cong',\
+'\\equiv',\
+'\\sim',\
+'\\simeq',\
+'\\oplus',\
+'\\bigoplus',\
+'\\amalg',\
+'\\lim',\
+'\\colim',\
+'\\emptyset',\
+'\\infty',\
+'\\dim',\
+'\\deg',\
+'\\det',\
+'\\sup',\
+'\\min',\
+'\\max',\
+'\\forall',\
+'\\exists',\
+'\\alpha',\
+'\\beta',\
+'\\gamma',\
+'\\Gamma',\
+'\\delta',\
+'\\Delta',\
+'\\epsilon',\
+'\\varepsilon',\
+'\\zeta',\
+'\\eta',\
+'\\theta',\
+'\\vartheta',\
+'\\iota',\
+'\\kappa',\
+'\\lambda',\
+'\\Lambda',\
+'\\mu',\
+'\\nu',\
+'\\xi',\
+'\\Xi',\
+'\\pi',\
+'\\Pi',\
+'\\rho',\
+'\\sigma',\
+'\\Sigma',\
+'\\tau',\
+'\\phi',\
+'\\Phi',\
+'\\varphi',\
+'\\chi',\
+'\\psi',\
+'\\Psi',\
+'\\omega',\
+'\\Omega',\
+'\\aleph',\
+'\\Mor',\
+'\\Hom',\
+'\\SheafHom',\
+'\\Sch',\
+'\\Spec',\
+'\\Ob',\
+'\\Im',\
+'\\Ker',\
+'\\Coker',\
+'\\Coim',\
+'\\Sh',\
+'\\QCoh',\
+'\\NL']
+
+open_braces = ['\\{', '(', '[', '.']
+close_braces = ['\\}', ')', ']', '.']
+bigs = ['\\Big', '\\big']
+middles = ['\{', '\}', '/', '(', ')']
+
+chars_after = '()\\,{} _$\n.^|\'/[]'
+
+def command_allowed_in_math_mode(line, n):
+	for special in specials:
+		if line.find(special, n) == n:
+			return 1
+	for command in commands_in_math_mode:
+		for c in chars_after:
+			if line.find(command + c, n) == n:
+				return 1
+	if line.find('\\ar[', n) == n or line.find('\\ar@', n) == n or line.find('\\ar ', n) == n:
+		return 1
+	for brace in open_braces:
+		if line.find('\\left' + brace, n) == n:
+			return 1
+	for brace in close_braces:
+		if line.find('\\right' + brace, n) == n:
+			return 1
+	for big in bigs:
+		for middle in middles:
+			if line.find(big + middle, n ) == n:
+				return 1
+	return 0
+
 def check_line(line, m, name, nr):
 	n = 0
 	while n < len(line):
 		if line[n] == '$':
 			m = 1 - m
 		else:
-			if (m == 1) and line.find('footnote', n) == n:
-				print_error('Footnote in math mode', line, name, nr)
+			if (m == 1):
+				if line.find('\\\\\n', n) == n:
+					n = n + 2
+				if line.find('\\footnote{', n) == n:
+					print_error('Footnote in math mode', line, name, nr)
+				if line.find('\\', n) == n:
+					if not command_allowed_in_math_mode(line, n):
+						print_error('command in math mode', line, name, nr)
+
 			if (m == 0):
 				if line.find('\\', n) == n:
 					if not command_allowed_outside_math_mode(line, n):

@@ -66,8 +66,11 @@ specials = [\
 '\\{',\
 '\\}',\
 '\\ ',\
-'\\hole ',\
+'\\!p}',\
+'\\\'etale ',\
+'\\hline ',\
 '\\choose ',\
+'\\atop ',\
 '\\vec{',\
 '\\widehat{',\
 '\\widetilde{',\
@@ -102,15 +105,19 @@ specials = [\
 '\\xrightarrow{',\
 '\\xleftarrow{',\
 '\\vcenter{',\
+'\\underbrace{',\
 '\\xymatrix{',\
 '\\xymatrix@',\
 '\\xymatrix @',\
 '\\label{equation-']
 
 commands_in_math_mode = [\
+'\\it nd}',\
 '\\nonumber',\
+'\\backslash',\
 '\\partial',\
 '\\dagger',\
+'\\nabla',\
 '\\!',\
 '\\#',\
 '\\natural',\
@@ -181,8 +188,13 @@ commands_in_math_mode = [\
 '\\longmapsto',\
 '\\begin{matrix}',\
 '\\end{matrix}',\
+'\\hole',\
+'\\omit',\
+'\\drtwocell',\
 '\\rtwocell',\
+'\\ruppertwocell',\
 '\\rruppertwocell',\
+'\\rlowertwocell',\
 '\\rrlowertwocell',\
 '\\rrtwocell',\
 '\\ll',\
@@ -196,17 +208,22 @@ commands_in_math_mode = [\
 '\\neq',\
 '\\cong',\
 '\\equiv',\
+'\\approx',\
 '\\sim',\
 '\\simeq',\
 '\\oplus',\
 '\\bigoplus',\
 '\\amalg',\
 '\\lim',\
+'\\limsup',\
 '\\colim',\
 '\\emptyset',\
 '\\infty',\
 '\\dim',\
 '\\deg',\
+'\\arg',\
+'\\int',\
+'\\log',\
 '\\det',\
 '\\sup',\
 '\\min',\
@@ -262,14 +279,18 @@ commands_in_math_mode = [\
 '\\Sh',\
 '\\QCoh',\
 '\\NL',\
-'\\etale']
+'\\etale',\
+'\\proetale']
 
 open_braces = ['\\{', '(', '[', '.']
 close_braces = ['\\}', ')', ']', '.']
+
 bigs = ['\\Big', '\\big']
-middles = ['\{', '\}', '/', '(', ')']
+after_bigs = ['\{', '\}', '/', '(', ')']
 
 chars_after = '()\\,{} _$\n.^|\'/[]'
+
+after_middle = ['|']
 
 def command_allowed_in_math_mode(line, n):
 	for special in specials:
@@ -279,7 +300,7 @@ def command_allowed_in_math_mode(line, n):
 		for c in chars_after:
 			if line.find(command + c, n) == n:
 				return 1
-	if line.find('\\ar[', n) == n or line.find('\\ar@', n) == n or line.find('\\ar ', n) == n:
+	if line.find('\\ar[', n) == n or line.find('\\ar@', n) == n or line.find('\\ar ', n) == n or line.find('\\ar\'[', n) == n:
 		return 1
 	for brace in open_braces:
 		if line.find('\\left' + brace, n) == n:
@@ -288,9 +309,12 @@ def command_allowed_in_math_mode(line, n):
 		if line.find('\\right' + brace, n) == n:
 			return 1
 	for big in bigs:
-		for middle in middles:
-			if line.find(big + middle, n ) == n:
+		for after in after_bigs:
+			if line.find(big + after, n ) == n:
 				return 1
+        for mid in after_middle:
+		if line.find('\\middle' + mid, n ) == n:
+			return 1
 	return 0
 
 def check_line(line, m, name, nr):

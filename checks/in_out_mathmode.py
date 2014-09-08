@@ -1,6 +1,13 @@
 from functions import *
 import config
 from functions import *
+from sys import argv
+
+exclude = []
+n = 1
+while n < len(argv):
+	exclude.append(argv[n])
+	n = n + 1
 
 commands_outside_math_mode = [\
 '\\noindent',\
@@ -59,17 +66,32 @@ specials = [\
 '\\{',\
 '\\}',\
 '\\ ',\
+'\\hole ',\
 '\\choose ',\
+'\\vec{',\
 '\\widehat{',\
 '\\widetilde{',\
+'\\widetilde M',\
+'\\widetilde N',\
+'\\widetilde R',\
+'\\widetilde S',\
+'\\widetilde I',\
+'\\widetilde A',\
+'\\widetilde B',\
+'\\widetilde K',\
+'\\linebreak[0]',\
 '\\phantom{',\
 '\\fbox{',\
+'\\boxed{',\
 '\\mod ',\
 '\\bmod ',\
 '\\gcd(',\
-'\\check{H}',\
+'\\check{C}',\
+'\\check C',\
 '\\check{\mathcal{C}}',\
+'\\check{H}',\
 '\\check H',\
+'\\check \\xi',\
 '\\ref{',\
 '\\frac{',\
 '\\overset{',\
@@ -82,13 +104,16 @@ specials = [\
 '\\vcenter{',\
 '\\xymatrix{',\
 '\\xymatrix@',\
+'\\xymatrix @',\
 '\\label{equation-']
 
 commands_in_math_mode = [\
 '\\nonumber',\
 '\\partial',\
+'\\dagger',\
 '\\!',\
 '\\#',\
+'\\natural',\
 '\\sharp',\
 '\\bullet',\
 '\\prime',\
@@ -110,6 +135,7 @@ commands_in_math_mode = [\
 '\\ell',\
 '\\times',\
 '\\otimes',\
+'\\bigotimes',\
 '\\wedge',\
 '\\vee',\
 '\\pm',\
@@ -145,6 +171,7 @@ commands_in_math_mode = [\
 '\\Leftrightarrow',\
 '\\leftrightarrow',\
 '\\longleftrightarrow',\
+'\\longleftarrow',\
 '\\leftarrow',\
 '\\Leftarrow',\
 '\\hookrightarrow',\
@@ -162,9 +189,10 @@ commands_in_math_mode = [\
 '\\gg',\
 '\\ge',\
 '\\geq',\
-'\\le',\
 '\\leq',\
+'\\le',\
 '\\not',\
+'\\ne',\
 '\\neq',\
 '\\cong',\
 '\\equiv',\
@@ -211,6 +239,7 @@ commands_in_math_mode = [\
 '\\sigma',\
 '\\Sigma',\
 '\\tau',\
+'\\upsilon',\
 '\\phi',\
 '\\Phi',\
 '\\varphi',\
@@ -232,7 +261,8 @@ commands_in_math_mode = [\
 '\\Coim',\
 '\\Sh',\
 '\\QCoh',\
-'\\NL']
+'\\NL',\
+'\\etale']
 
 open_braces = ['\\{', '(', '[', '.']
 close_braces = ['\\}', ')', ']', '.']
@@ -295,6 +325,9 @@ in_display_math_mode = 0
 for name in lijstje:
 	if name == "fdl": continue
 	if name == "coding": continue
+        if name in exclude: continue
+        print name
+        print
 	tex_file = open(path + name + ".tex", 'r')
 	nr = 0
 	for line in tex_file:

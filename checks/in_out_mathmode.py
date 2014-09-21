@@ -112,7 +112,6 @@ specials = [\
 '\\label{equation-']
 
 commands_in_math_mode = [\
-'\\it nd}',\
 '\\nonumber',\
 '\\backslash',\
 '\\partial',\

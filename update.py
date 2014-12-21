@@ -1,4 +1,8 @@
-import bibliography.update, statistics.commits, statistics.counts, tags.tags, tags.tex, tags.titles
+import bibliography.update, historical.data, statistics.commits, statistics.counts, tags.tags, tags.tex, tags.titles
+
+# see documentation in historical/classes.py for the explanation...
+# there is also a name clash which I want to avoid by naming the module historical
+from historical.classes import env_with_proof, env_without_proof, env_history, history
 
 print "Taking care of the bootstrap"
 tags.tags.importBootstrap()
@@ -27,3 +31,6 @@ bibliography.update.importBibliography()
 
 print "\nImporting titles"
 tags.titles.importTitles()
+
+print "\nImporting history"
+historical.data.importHistory()

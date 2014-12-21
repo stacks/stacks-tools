@@ -9,3 +9,6 @@ websiteProject = "../stacks-website/tex"
 
 # location of the "local" stacks-project folder
 localProject = "../stacks-project"
+
+# location of the Pickle containing the raw data for the history
+historyData = "../stacks-history/histories"

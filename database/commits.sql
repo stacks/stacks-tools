@@ -1,5 +1,5 @@
 CREATE TABLE "commits" (
-  "commit" VARCHAR PRIMARY KEY NOT NULL,
+  "hash" VARCHAR PRIMARY KEY,
   "log" TEXT,
   "time" DATETIME
 );

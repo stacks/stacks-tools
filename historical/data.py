@@ -1,5 +1,6 @@
 import cPickle as pickle
 import sqlite3
+import subprocess
 
 import general, config
 
@@ -44,6 +45,23 @@ def insertChange(change, tag, commit, env, begin, end, cursor):
     print "An error occurred:", e.args[0]
 
 
+def getCommitInfo(commit):
+  subject = subprocess.check_output(["git --git-dir " + config.localProject + "/.git log " + commit + " --pretty=format:%s -n 1"], stderr=subprocess.STDOUT, shell=True)
+  time = subprocess.check_output(["git --git-dir " + config.localProject + "/.git log " + commit + " --pretty=format:%ai -n 1"], stderr=subprocess.STDOUT, shell=True)
+  author = subprocess.check_output(["git --git-dir " + config.localProject + "/.git log " + commit + " --pretty=format:%an -n 1"], stderr=subprocess.STDOUT, shell=True)
+
+  return [author, time, subject]
+
+
+def insertCommitInfo(commit, info, cursor):
+  try:
+    query = 'INSERT INTO commits (hash, author, log, time) VALUES (?, ?, ?, ?)'
+    cursor.execute(query, (commit, info[0], info[2], info[1]))
+
+  except sqlite3.Error, e:
+    print "An error occurred:", e.args[0]
+
+
 # process a tag determining all the required information for the database
 def process_tag(history, cursor):
   print 'Considering ' + history.env.tag
@@ -81,7 +99,7 @@ def process_tag(history, cursor):
       if name == '':
         insertChange('creation', history.env.tag, commit, env, env.b, env.e, cursor)
       else:
-        insertChange('move', history.env.tag, commit, env, env.b, env.e, cursor)
+        insertChange('move file', history.env.tag, commit, env, env.b, env.e, cursor)
 
       name = env.name
 
@@ -123,9 +141,11 @@ def importHistory():
   (connection, cursor) = general.connect()
 
   # process commits
+  print "  Processing commits"
   for commit in history.commits:
-    insertCommit(commit, cursor) # TODO at the moment we don't have the commit log and time available
+    insertCommitInfo(commit, getCommitInfo(commit), cursor)
 
+  print "  Processing histories"
   for tag in history.env_histories:
     # there must be a tag, otherwise it is not accessible on the website (intermediate commits can have "tag-less tags")
     if tag.env.tag != "":

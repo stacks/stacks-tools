@@ -46,6 +46,7 @@ short_titles = {'introduction' : 'Introduction',\
 'more-groupoids' : 'More on Groupoids,',\
 'etale' : '\\\'Etale Morphisms,',\
 'chow' : 'Chow Homology,',\
+'intersection' : 'Intersection Theory,',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\

@@ -74,7 +74,6 @@ short_titles = {'introduction' : 'Introduction',\
 'formal-spaces' : 'Formal Spaces,',\
 'restricted' : 'Restricted Power Series,',\
 'resolve' : 'Resolution of Surfaces,',\
-'groups' : 'Algebraic Groups,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\
 'cotangent' : 'Cotangent,',\

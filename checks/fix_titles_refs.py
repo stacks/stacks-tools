@@ -47,6 +47,7 @@ short_titles = {'introduction' : 'Introduction',\
 'etale' : '\\\'Etale Morphisms,',\
 'chow' : 'Chow Homology,',\
 'intersection' : 'Intersection Theory,',\
+'pic' : 'Picard Schemes of Curves,',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\
@@ -73,6 +74,7 @@ short_titles = {'introduction' : 'Introduction',\
 'formal-spaces' : 'Formal Spaces,',\
 'restricted' : 'Restricted Power Series,',\
 'resolve' : 'Resolution of Surfaces,',\
+'groups' : 'Algebraic Groups,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\
 'cotangent' : 'Cotangent,',\

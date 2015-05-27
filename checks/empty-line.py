@@ -38,6 +38,7 @@ for name in lijstje:
 	tex_file = open(path + name + ".tex", 'r')
 	nr = 0
 	previous_empty = 0
+	ended = 0
 	for line in tex_file:
 		nr = nr + 1
 		if not previous_empty and previous_should_be_empty(line):
@@ -49,5 +50,12 @@ for name in lijstje:
 			if previous_empty:
 				if not ok_for_first_line(line):
 					print name, nr, line
+				if ended and line.find('\\medskip\\noindent') == 0:
+					print name, nr, line
+				ended = 0
 			previous_empty = 0
+			if line.find('\\end{') == 0:
+				ended = 1
+			else:
+				ended = 0
 	tex_file.close()

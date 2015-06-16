@@ -50,6 +50,7 @@ short_titles = {'introduction' : 'Introduction',\
 'pic' : 'Picard Schemes of Curves,',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\
+'resolve' : 'Resolution of Surfaces,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\
 'crystalline' : 'Crystalline Cohomology,',\
 'proetale' : 'Pro-\\\'etale Cohomology,',\
@@ -73,7 +74,7 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-simplicial' : 'Simplicial Spaces,',\
 'formal-spaces' : 'Formal Spaces,',\
 'restricted' : 'Restricted Power Series,',\
-'resolve' : 'Resolution of Surfaces,',\
+'spaces-resolve' : 'Resolution of Surfaces Revisited,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\
 'cotangent' : 'Cotangent,',\

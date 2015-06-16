@@ -438,6 +438,10 @@ def split_label(label):
 		name = "formal-spaces"
 		type = pieces[2]
 		n = 3
+        if name == "spaces" and type == "resolve":
+                name = "spaces-resolve"
+                type = pieces[2]
+                n = 3
 	if name == "formal" and type == "defos":
 		name = "formal-defos"
 		type = pieces[2]

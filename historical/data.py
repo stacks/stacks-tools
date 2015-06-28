@@ -134,9 +134,8 @@ def process_tag(history, cursor):
     print ''
 
 
-def importHistory():
-  # TODO this must be dynamic somehow
-  history = load_back('5b422bc40419ce8e1c682591edb8d17eea4e1c8f')
+def importHistory(commit):
+  history = load_back(commit)
 
   (connection, cursor) = general.connect()
 

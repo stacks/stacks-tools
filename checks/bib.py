@@ -66,15 +66,22 @@ for line in bib_file:
 bib_file.close()
 
 
-def check_citations(line):
+def check_citations(line, name, nr):
 	refs = []
-	n = line.find("\\cite{")
+	n = line.find("\\cite")
 	while n >= 0:
-		m = find_sub_clause(line, n + 5, "{", "}")
-		ref = line[n + 6: m]
+		if line[n + 5] == '[':
+			n = find_sub_clause(line, n + 5, "[", "]") + 1
+		else:
+			n = n + 5
+		if not line[n] == '{':
+			print_error('Incorrect citation!', line, name, nr)
+			return
+		m = find_sub_clause(line, n, "{", "}")
+		ref = line[n + 1: m]
 		if not ref in references:
 			print_error('Citation wrong!', line, name, nr)
-		n = line.find("\\cite{", m)
+		n = line.find("\\cite", m)
 	return refs
 
 path = config.localProject + "/"
@@ -88,7 +95,7 @@ for name in lijstje:
 	nr = 0
 	for line in tex_file:
 		nr = nr + 1
-		if line.find('\\cite{') >= 0:
-			check_citations(line)
+		if line.find('\\cite') >= 0:
+			check_citations(line, name, nr)
 	
 	tex_file.close()

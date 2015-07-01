@@ -38,16 +38,24 @@ for name in lijstje:
 	tex_file = open(path + name + ".tex", 'r')
 	nr = 0
 	previous_empty = 0
+	ended = 0
 	for line in tex_file:
 		nr = nr + 1
 		if not previous_empty and previous_should_be_empty(line):
-			print name, nr, line
+			print_error("Previous line not empty", line, name, nr)
 		if line.find('%') == 0: continue
 		if line.strip() == "":
 			previous_empty = 1
 		else:
 			if previous_empty:
 				if not ok_for_first_line(line):
-					print name, nr, line
+					print_error("Bad first line", line, name, nr)
+				if ended and line.find('\\medskip\\noindent') == 0:
+					print_error("Misplaced medskip", line, name, nr)
+				ended = 0
 			previous_empty = 0
+			if line.find('\\end{') == 0:
+				ended = 1
+			else:
+				ended = 0
 	tex_file.close()

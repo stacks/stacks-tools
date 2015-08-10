@@ -474,6 +474,10 @@ def split_label(label):
 		name = "stacks-introduction"
 		type = pieces[2]
 		n = 3
+	if name == "stacks" and type == "more" and pieces[2] == "morphisms":
+		name = "stacks-more-morphisms"
+		type = pieces[3]
+		n = 4
 	while n < len(pieces):
 		rest = rest + "-" + pieces[n]
 		n = n + 1

@@ -46,9 +46,9 @@ def insertChange(change, tag, commit, env, begin, end, cursor):
 
 
 def getCommitInfo(commit):
-  subject = subprocess.check_output(["git --git-dir " + config.localProject + "/.git log " + commit + " --pretty=format:%s -n 1"], stderr=subprocess.STDOUT, shell=True)
-  time = subprocess.check_output(["git --git-dir " + config.localProject + "/.git log " + commit + " --pretty=format:%ai -n 1"], stderr=subprocess.STDOUT, shell=True)
-  author = subprocess.check_output(["git --git-dir " + config.localProject + "/.git log " + commit + " --pretty=format:%an -n 1"], stderr=subprocess.STDOUT, shell=True)
+  subject = subprocess.check_output(["git --git-dir " + config.websiteProject + "/.git log " + commit + " --pretty=format:%s -n 1"], stderr=subprocess.STDOUT, shell=True)
+  time = subprocess.check_output(["git --git-dir " + config.websiteProject + "/.git log " + commit + " --pretty=format:%ai -n 1"], stderr=subprocess.STDOUT, shell=True)
+  author = subprocess.check_output(["git --git-dir " + config.websiteProject + "/.git log " + commit + " --pretty=format:%an -n 1"], stderr=subprocess.STDOUT, shell=True)
 
   return [author, time, subject]
 

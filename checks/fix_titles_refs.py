@@ -259,6 +259,9 @@ def get_title(line):
 		Short_Title = 'Introducing Algebraic Stacks,'
 		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
 			return Short_Title
+                Short_Title = 'More on Morphisms of Stacks,'
+		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
+			return Short_Title
 	# len(occur) >= 3
 	return 'error'
 

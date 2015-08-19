@@ -51,6 +51,7 @@ short_titles = {'introduction' : 'Introduction',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\
 'resolve' : 'Resolution of Surfaces,',\
+'pione' : 'Fundamental Groups,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\
 'crystalline' : 'Crystalline Cohomology,',\
 'proetale' : 'Pro-\\\'etale Cohomology,',\

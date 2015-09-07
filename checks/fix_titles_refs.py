@@ -50,6 +50,7 @@ short_titles = {'introduction' : 'Introduction',\
 'pic' : 'Picard Schemes of Curves,',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\
+'curves' : 'Algebraic Curves,',\
 'resolve' : 'Resolution of Surfaces,',\
 'pione' : 'Fundamental Groups,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\

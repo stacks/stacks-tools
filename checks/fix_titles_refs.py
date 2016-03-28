@@ -52,6 +52,7 @@ short_titles = {'introduction' : 'Introduction',\
 'dualizing' : 'Dualizing Complexes,',\
 'curves' : 'Algebraic Curves,',\
 'resolve' : 'Resolution of Surfaces,',\
+'models' : 'Semistable Reduction,',\
 'pione' : 'Fundamental Groups,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\
 'crystalline' : 'Crystalline Cohomology,',\

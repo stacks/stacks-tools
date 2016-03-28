@@ -102,6 +102,16 @@ short_titles = {'introduction' : 'Introduction',\
 'fdl' : 'GNU Free Documentation License,',\
 'index' : 'Auto Generated Index,'}
 
+if not len(short_titles) == len(lijstje) + 1:
+	print "Wrong list of short titles!"
+	for name in lijstje:
+		if not name in short_titles:
+			print "Missing from short titles: " + name
+	for ST in short_titles:
+		if not ST in lijstje and not ST == "index":
+			print "Missing from lijstje: " + ST
+	exit(1)
+
 #
 # Do not test for item or equation
 #

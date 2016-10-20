@@ -418,6 +418,10 @@ def split_label(label):
                 name = "spaces-pushouts"
                 type = pieces[2]
                 n = 3
+        if name == "spaces" and type == "flat":
+                name = "spaces-flat"
+                type = pieces[2]
+                n = 3
 	if name == "spaces" and type == "groupoids":
 		name = "spaces-groupoids"
 		type = pieces[2]

@@ -434,6 +434,10 @@ def split_label(label):
 		name = "groupoids-quotients"
 		type = pieces[2]
 		n = 3
+	if name == "spaces" and type == "more" and pieces[2] == "cohomology":
+		name = "spaces-more-cohomology"
+		type = pieces[3]
+		n = 4
 	if name == "spaces" and type == "simplicial":
 		name = "spaces-simplicial"
 		type = pieces[2]

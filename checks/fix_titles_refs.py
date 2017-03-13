@@ -75,6 +75,7 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-more-groupoids' : 'More on Groupoids in Spaces,',\
 'bootstrap' : 'Bootstrap,',\
 'groupoids-quotients' : 'Quotients of Groupoids,',\
+'spaces-more-cohomology' : 'More on Cohomology of Spaces,',\
 'spaces-simplicial' : 'Simplicial Spaces,',\
 'formal-spaces' : 'Formal Spaces,',\
 'restricted' : 'Restricted Power Series,',\

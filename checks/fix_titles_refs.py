@@ -272,6 +272,9 @@ def get_title(line):
 		Short_Title = 'More on Groupoids in Spaces,'
 		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
 			return Short_Title
+		Short_Title = 'More on Cohomology of Spaces,'
+		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
+			return Short_Title
 		Short_Title = 'Introducing Algebraic Stacks,'
 		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
 			return Short_Title

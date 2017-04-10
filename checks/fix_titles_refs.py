@@ -96,7 +96,8 @@ short_titles = {'introduction' : 'Introduction',\
 'stacks-perfect' : 'Derived Categories of Stacks,',\
 'stacks-introduction' : 'Introducing Algebraic Stacks,',\
 'stacks-more-morphisms' : 'More on Morphisms of Stacks,',\
-'moduli' : 'Moduli of Curves,',\
+'moduli' : 'Moduli Stacks,',\
+'moduli-curves' : 'Moduli of Curves,',\
 'examples' : 'Examples,',\
 'exercises' : 'Exercises,',\
 'guide' : 'Guide to Literature,',\

@@ -96,6 +96,7 @@ short_titles = {'introduction' : 'Introduction',\
 'stacks-perfect' : 'Derived Categories of Stacks,',\
 'stacks-introduction' : 'Introducing Algebraic Stacks,',\
 'stacks-more-morphisms' : 'More on Morphisms of Stacks,',\
+'stacks-geometry' : 'Geometry of Stacks,',\
 'moduli' : 'Moduli Stacks,',\
 'moduli-curves' : 'Moduli of Curves,',\
 'examples' : 'Examples,',\
@@ -342,6 +343,8 @@ def get_type(line):
 			# Exception
 			if 'Exercises, Exercise' in line:
 				return 'Exercise'
+			if 'Examples of Stacks, Example' in line:
+				return 'Example'
 			return 'error'
 		else:
 			return occur[0]

@@ -490,6 +490,10 @@ def split_label(label):
 		name = "stacks-more-morphisms"
 		type = pieces[3]
 		n = 4
+	if name == "stacks" and type == "geometry":
+		name = "stacks-geometry"
+		type = pieces[2]
+		n = 3
 	if name == "moduli" and type == "curves":
 		name = "moduli-curves"
 		type = pieces[2]

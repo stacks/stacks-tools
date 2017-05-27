@@ -83,6 +83,7 @@ short_titles = {'introduction' : 'Introduction',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\
 'cotangent' : 'Cotangent,',\
+'examples-defos' : 'Deformation Problems,',\
 'algebraic' : 'Algebraic Stacks,',\
 'examples-stacks' : 'Examples of Stacks,',\
 'stacks-sheaves' : 'Sheaves on Stacks,',\

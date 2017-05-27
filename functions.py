@@ -454,6 +454,10 @@ def split_label(label):
 		name = "formal-defos"
 		type = pieces[2]
 		n = 3
+	if name == "examples" and type == "defos":
+		name = "examples-defos"
+		type = pieces[2]
+		n = 3
 	if name == "examples" and type == "stacks":
 		name = "examples-stacks"
 		type = pieces[2]

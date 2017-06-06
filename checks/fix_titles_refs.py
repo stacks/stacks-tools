@@ -50,6 +50,9 @@ short_titles = {'introduction' : 'Introduction',\
 'pic' : 'Picard Schemes of Curves,',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\
+'duality' : 'Duality for Schemes,',\
+'discriminant' : 'Discriminants,',\
+'local-cohomology' : 'Local Cohomology,',\
 'curves' : 'Algebraic Curves,',\
 'resolve' : 'Resolution of Surfaces,',\
 'models' : 'Semistable Reduction,',\

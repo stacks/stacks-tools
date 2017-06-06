@@ -366,6 +366,10 @@ def split_label(label):
 		name = "more-groupoids"
 		type = pieces[2]
 		n = 3
+	if name == "local" and type == "cohomology":
+		name = "local-cohomology"
+		type = pieces[2]
+		n = 3
 	if name == "etale" and type == "cohomology":
 		name = "etale-cohomology"
 		type = pieces[2]

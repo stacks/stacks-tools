@@ -279,10 +279,23 @@ commands_in_math_mode = [\
 '\\QCoh',\
 '\\NL',\
 '\\etale',\
-'\\proetale']
+'\\proetale',\
+'\\Ext',\
+'\\Pic',\
+'\\SheafExt',\
+'\\QCohstack',\
+'\\Cohstack',\
+'\\Spacesstack',\
+'\\Quotfunctor',\
+'\\Hilbfunctor',\
+'\\Curvesstack',\
+'\\Polarizedstack',\
+'\\Complexesstack',\
+'\\Picardstack',\
+'\\Picardfunctor']
 
-open_braces = ['\\{', '(', '[', '.']
-close_braces = ['\\}', ')', ']', '.']
+open_braces = ['\\{', '(', '[', '.', '\\lfloor', '\\langle']
+close_braces = ['\\}', ')', ']', '.', '\\rfloor', '\\rangle']
 
 bigs = ['\\Big', '\\big']
 after_bigs = ['\{', '\}', '/', '(', ')']

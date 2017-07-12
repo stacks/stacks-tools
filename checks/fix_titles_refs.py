@@ -80,6 +80,7 @@ short_titles = {'introduction' : 'Introduction',\
 'groupoids-quotients' : 'Quotients of Groupoids,',\
 'spaces-more-cohomology' : 'More on Cohomology of Spaces,',\
 'spaces-simplicial' : 'Simplicial Spaces,',\
+'spaces-duality' : 'Duality for Spaces,',\
 'formal-spaces' : 'Formal Spaces,',\
 'restricted' : 'Restricted Power Series,',\
 'spaces-resolve' : 'Resolution of Surfaces Revisited,',\

@@ -77,6 +77,7 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-more-groupoids' : 'More on Groupoids in Spaces,',\
 'bootstrap' : 'Bootstrap,',\
 'spaces-pushouts' : 'Pushouts of Spaces,',\
+'spaces-chow' : 'Chow Groups of Spaces,',\
 'groupoids-quotients' : 'Quotients of Groupoids,',\
 'spaces-more-cohomology' : 'More on Cohomology of Spaces,',\
 'spaces-simplicial' : 'Simplicial Spaces,',\

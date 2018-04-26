@@ -53,6 +53,7 @@ short_titles = {'introduction' : 'Introduction',\
 'duality' : 'Duality for Schemes,',\
 'discriminant' : 'Discriminants,',\
 'local-cohomology' : 'Local Cohomology,',\
+'algebraization' : 'Algebraic and Formal Geometry,',\
 'curves' : 'Algebraic Curves,',\
 'resolve' : 'Resolution of Surfaces,',\
 'models' : 'Semistable Reduction,',\

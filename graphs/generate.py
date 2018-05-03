@@ -203,7 +203,7 @@ def getSectionsAndChapters():
   global sections, filenameToChapter
 
   try:
-    query = "SELECT tags.book_id, tags.name, tags.tag, file FROM tags, sections WHERE tags.book_id = sections.number AND type = 'section'"
+    query = "SELECT tags.book_id, tags.name, tags.tag, file FROM tags WHERE type = 'section'"
     cursor = connection.execute(query)
 
     result = cursor.fetchall()

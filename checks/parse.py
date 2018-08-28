@@ -239,7 +239,7 @@ while n < nr:
 	label = tags[n][1]
 	if label.find(' ') >= 0:
 		print "Found illegal character in: " + label
-	if not check_ref(label, labels):
+	if not check_ref(label, labels) and not label.find('book-part-') == 0:
 		print "Tag pointing nowhere: ",
 		print tags[n]
 	if not label in tagged_up:

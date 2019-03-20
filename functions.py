@@ -374,6 +374,10 @@ def split_label(label):
 		name = "etale-cohomology"
 		type = pieces[2]
 		n = 3
+	if name == "more" and type == "etale":
+		name = "more-etale"
+		type = pieces[2]
+		n = 3
 	if name == "spaces" and type == "properties":
 		name = "spaces-properties"
 		type = pieces[2]

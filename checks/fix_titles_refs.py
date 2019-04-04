@@ -61,7 +61,7 @@ short_titles = {'introduction' : 'Introduction',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\
 'crystalline' : 'Crystalline Cohomology,',\
 'proetale' : 'Pro-\\\'etale Cohomology,',\
-'more-etale' : 'More \'Etale Cohomology,',\
+'more-etale' : 'More \\\'Etale Cohomology,',\
 'trace' : 'The Trace Formula,',\
 'spaces' : 'Spaces,',\
 'spaces-properties' : 'Properties of Spaces,',\
@@ -278,6 +278,9 @@ def get_title(line):
 			return occur[1]
 		return 'error'
 	if len(occur) == 3:
+		Short_Title = 'More \\\'Etale Cohomology,'
+		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
+			return Short_Title
 		Short_Title = 'More on Morphisms of Spaces,'
 		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
 			return Short_Title

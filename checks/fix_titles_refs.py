@@ -47,6 +47,7 @@ short_titles = {'introduction' : 'Introduction',\
 'etale' : '\\\'Etale Morphisms,',\
 'chow' : 'Chow Homology,',\
 'intersection' : 'Intersection Theory,',\
+'weil' : 'Weil Cohomology Theories,',\
 'pic' : 'Picard Schemes of Curves,',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\

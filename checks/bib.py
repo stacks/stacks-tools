@@ -24,9 +24,13 @@ def check_at(line, nr):
 	if not ok:
 		print_error_bib('type not ok', line, nr)
 	else:
+		comma_location = line.find(',')
+		if comma_location < 0:
+			print_error_bib('missing comma', line, nr)
+		else:
+			if not comma_location + 2 == len(line):
+				print_error_bib('extra character', line, nr)
 		ref = line[n + 2 : -2]
-		if ref.find(',') >= 0:
-			print_error_bib('extra character', line, nr)
 		references.append(ref)
 
 

@@ -48,6 +48,7 @@ short_titles = {'introduction' : 'Introduction',\
 'chow' : 'Chow Homology,',\
 'intersection' : 'Intersection Theory,',\
 'weil' : 'Weil Cohomology Theories,',\
+'derham' : 'de Rham Cohomology,',\
 'pic' : 'Picard Schemes of Curves,',\
 'adequate' : 'Adequate Modules,',\
 'dualizing' : 'Dualizing Complexes,',\

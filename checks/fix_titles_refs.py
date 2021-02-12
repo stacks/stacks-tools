@@ -90,7 +90,7 @@ short_titles = {'introduction' : 'Introduction',\
 'spaces-simplicial' : 'Simplicial Spaces,',\
 'spaces-duality' : 'Duality for Spaces,',\
 'formal-spaces' : 'Formal Spaces,',\
-'restricted' : 'Restricted Power Series,',\
+'restricted' : 'Algebraization of Formal Spaces,',\
 'spaces-resolve' : 'Resolution of Surfaces Revisited,',\
 'formal-defos' : 'Formal Deformation Theory,',\
 'defos' : 'Deformation Theory,',\
@@ -292,6 +292,9 @@ def get_title(line):
 		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
 			return Short_Title
 		Short_Title = 'More on Cohomology of Spaces,'
+		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
+			return Short_Title
+		Short_Title = 'Algebraization of Formal Spaces,'
 		if occur[0] == Short_Title or occur[1] == Short_Title or occur[2] == Short_Title:
 			return Short_Title
 		Short_Title = 'Introducing Algebraic Stacks,'

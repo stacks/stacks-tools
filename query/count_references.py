@@ -65,33 +65,20 @@ for name in lijstje:
 
 	tex_file.close()
 
-T = 0
-n = 0
-while n < len(tags):
-	if tags_nr[tags[n][0]] > T:
-		T = tags_nr[tags[n][0]]
-	n = n + 1
+gesorteerd = sorted(tags_nr.items(), key=lambda (tag, n): n, reverse=True)
+
+maxref = gesorteerd[0][1]
 
 print "Maximum number of references is",
-print T,
+print maxref
 print "attained by: "
-n = 0
-while n < len(tags):
-	if tags_nr[tags[n][0]] == T:
-		print tags[n][0],
-	n = n + 1
-print
-print "The next few maxima are: "
-m = 1
-while m < 70:
-	print "Number of references:",
-	print T - m,
-	print " : ",
-	n = 0
-	while n < len(tags):
-		if tags_nr[tags[n][0]] == T - m:
-			print tags[n][0],
-		n = n + 1
-	print
-	m = m + 1
+for t in gesorteerd:
+    if t[1] == maxref:
+        print t[0]
+    else:
+        break
+
+print "The 100 most referenced tags are:"
+for tag,n in gesorteerd[0:100]:
+    print tag, n
 

@@ -60,6 +60,7 @@ short_titles = {'introduction' : 'Introduction',\
 'curves' : 'Algebraic Curves,',\
 'resolve' : 'Resolution of Surfaces,',\
 'models' : 'Semistable Reduction,',\
+'functors' : 'Functors and Morphisms,',\
 'equiv' : 'Derived Categories of Varieties',\
 'pione' : 'Fundamental Groups,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\

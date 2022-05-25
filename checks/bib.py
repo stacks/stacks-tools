@@ -85,6 +85,8 @@ def check_citations(line, name, nr):
 		ref = line[n + 1: m]
 		if not ref in references:
 			print_error('Citation wrong!', line, name, nr)
+		if line[m + 1] == '[':
+			print_error('Citation wrong!', line, name, nr)
 		n = line.find("\\cite", m)
 	return refs
 

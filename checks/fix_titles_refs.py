@@ -61,7 +61,7 @@ short_titles = {'introduction' : 'Introduction',\
 'resolve' : 'Resolution of Surfaces,',\
 'models' : 'Semistable Reduction,',\
 'functors' : 'Functors and Morphisms,',\
-'equiv' : 'Derived Categories of Varieties',\
+'equiv' : 'Derived Categories of Varieties,',\
 'pione' : 'Fundamental Groups,',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\
 'crystalline' : 'Crystalline Cohomology,',\

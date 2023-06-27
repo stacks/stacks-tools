@@ -66,6 +66,7 @@ short_titles = {'introduction' : 'Introduction',\
 'etale-cohomology' : '\\\'Etale Cohomology,',\
 'crystalline' : 'Crystalline Cohomology,',\
 'proetale' : 'Pro-\\\'etale Cohomology,',\
+'relative-cycles' : 'Relative Cycles,',\
 'more-etale' : 'More \\\'Etale Cohomology,',\
 'trace' : 'The Trace Formula,',\
 'spaces' : 'Spaces,',\

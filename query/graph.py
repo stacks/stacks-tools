@@ -104,25 +104,25 @@ for name in lijstje:
 
 
 def print_whole_graph():
-	print "digraph dependencies {"
-	print
-	print "edge [dir=back]"
-	print
+	print("digraph dependencies {")
+	print()
+	print("edge [dir=back]")
+	print()
 	n = 0
 	while n < len(tags):
-		print "a" + tags[n][0] + "a",
-		print "[label=\"" + tags[n][0] + "\", color=green, fontcolor=blue, shape=rectangle]"
+		print("a" + tags[n][0] + "a", end=' ')
+		print("[label=\"" + tags[n][0] + "\", color=green, fontcolor=blue, shape=rectangle]")
 		n = n + 1
 	n = 0
 	while n < len(tags):
 		m = 0
 		while m < len(tags_refs[tags[n][0]]):
-			print "a" + tags[n][0] + "a",
-			print "->",
-			print "a" + tags_refs[tags[n][0]][m] + "a"
+			print("a" + tags[n][0] + "a", end=' ')
+			print("->", end=' ')
+			print("a" + tags_refs[tags[n][0]][m] + "a")
 			m = m + 1
 		n = n + 1
-	print "}"
+	print("}")
 
 def print_max_nodes():
 	T = 0
@@ -131,27 +131,27 @@ def print_max_nodes():
 		if tags_nr[tags[n][0]] > T:
 			T = tags_nr[tags[n][0]]
 		n = n + 1
-	print "Maximum height is",
-	print T,
-	print "attained by: "
+	print("Maximum height is", end=' ')
+	print(T, end=' ')
+	print("attained by: ")
 	n = 0
 	while n < len(tags):
 		if tags_nr[tags[n][0]] == T:
-			print tags[n][0],
+			print(tags[n][0], end=' ')
 		n = n + 1
-	print
-	print "The next few maxima are: "
+	print()
+	print("The next few maxima are: ")
 	m = 1
 	while m < 20:
-		print "Height",
-		print T - m,
-		print " : ",
+		print("Height", end=' ')
+		print(T - m, end=' ')
+		print(" : ", end=' ')
 		n = 0
 		while n < len(tags):
 			if tags_nr[tags[n][0]] == T - m:
-				print tags[n][0],
+				print(tags[n][0], end=' ')
 			n = n + 1
-		print
+		print()
 		m = m + 1
 
 def print_distribution():
@@ -161,21 +161,21 @@ def print_distribution():
 		if tags_nr[tags[n][0]] > T:
 			T = tags_nr[tags[n][0]]
 		n = n + 1
-	print "Maximum height is",
-	print T,
-	print ". The distribution: "
+	print("Maximum height is", end=' ')
+	print(T, end=' ')
+	print(". The distribution: ")
 	m = T
 	while m >= 0:
-		print "Height",
-		print m,
-		print " : ",
+		print("Height", end=' ')
+		print(m, end=' ')
+		print(" : ", end=' ')
 		n = 0
 		nr = 0
 		while n < len(tags):
 			if tags_nr[tags[n][0]] == m:
 				nr = nr + 1
 			n = n + 1
-		print nr
+		print(nr)
 		m = m - 1
 
 def print_tree_tag(mytag):
@@ -183,7 +183,7 @@ def print_tree_tag(mytag):
 	mylist = [mytag]
 	oldset = set()
 	while n >= 2 and len(mylist) > 0:
-		print mylist
+		print(mylist)
 		newlist = []
 		m = 0
 		while m < len(mylist):
@@ -196,15 +196,15 @@ def print_tree_tag(mytag):
 		n = n - 1
 
 def print_graph_tag(mytag):
-	print "digraph dependencies {"
-	print
-	print "nodesep=0.05"
-	print "edge [dir=back]"
-	print
+	print("digraph dependencies {")
+	print()
+	print("nodesep=0.05")
+	print("edge [dir=back]")
+	print()
 	n = tags_nr[mytag]
 	mylist = [mytag]
-	print "a" + mytag + "a",
-	print "[label=\"" + mytag + "\", color=green, fontcolor=blue, shape=rectangle, width=0.5, height=0.25]"
+	print("a" + mytag + "a", end=' ')
+	print("[label=\"" + mytag + "\", color=green, fontcolor=blue, shape=rectangle, width=0.5, height=0.25]")
 	oldset = set()
 	while n >= 0 and len(mylist) > 0:
 		m = 0
@@ -222,25 +222,25 @@ def print_graph_tag(mytag):
 					prelims = prelims + tags_refs[mylist[m]][k]
 					prelims_txt = prelims_txt + tags_refs[mylist[m]][k]
 				else:
-					print "a" + tags_refs[mylist[m]][k] + "a",
-					print "[label=\"" + tags_refs[mylist[m]][k] + "\", color=green, fontcolor=blue, shape=rectangle, width=0.5, height=0.25]"
-					print "a" + mylist[m] + "a",
-					print "->",
-					print "a" + tags_refs[mylist[m]][k] + "a"
+					print("a" + tags_refs[mylist[m]][k] + "a", end=' ')
+					print("[label=\"" + tags_refs[mylist[m]][k] + "\", color=green, fontcolor=blue, shape=rectangle, width=0.5, height=0.25]")
+					print("a" + mylist[m] + "a", end=' ')
+					print("->", end=' ')
+					print("a" + tags_refs[mylist[m]][k] + "a")
 				k = k + 1
 			if not prelims == "":
-				print "a" + prelims + "a",
-				print "[label=\"" + prelims_txt + "\", color=green, fontcolor=blue, shape=rectangle, width=0.5, height=0.25]"
-				print "a" + mylist[m] + "a",
-				print "->",
-				print "a" + prelims + "a"
+				print("a" + prelims + "a", end=' ')
+				print("[label=\"" + prelims_txt + "\", color=green, fontcolor=blue, shape=rectangle, width=0.5, height=0.25]")
+				print("a" + mylist[m] + "a", end=' ')
+				print("->", end=' ')
+				print("a" + prelims + "a")
 			m = m + 1
 		newset = set(newlist)
 		newset -= oldset
 		oldset |= newset
 		mylist = list(newset)
 		n = n - 1
-	print "}"
+	print("}")
 
 #print_whole_graph()
 #print_graph_tag('0200')

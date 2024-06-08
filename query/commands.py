@@ -38,5 +38,5 @@ for name in lijstje:
 
 n = 0
 while n < len(commands):
-	print commands[n]
+	print(commands[n])
 	n = n + 1

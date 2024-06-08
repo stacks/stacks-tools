@@ -54,7 +54,7 @@ for name in lijstje:
 		xytext = xytext + " " + line.rstrip()
 		if nr_braces(xytext) == 0:
 			xymatrix = 0
-			print xytext
+			print(xytext)
 			xytext = ""
 
 	tex_file.close()

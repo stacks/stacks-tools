@@ -72,26 +72,22 @@ while n < len(tags):
 		T = tags_nr[tags[n][0]]
 	n = n + 1
 
-print "Maximum number of references is",
-print T,
-print "attained by: "
+print("Maximum number of references is", T, "attained by: ")
 n = 0
 while n < len(tags):
 	if tags_nr[tags[n][0]] == T:
-		print tags[n][0],
+		print(tags[n][0])
 	n = n + 1
-print
-print "The next few maxima are: "
+print()
+print("The next few maxima are: ")
 m = 1
-while m < 70:
-	print "Number of references:",
-	print T - m,
-	print " : ",
+while m < 100:
+	print("Number of references:", T - m,": ", end = '')
 	n = 0
 	while n < len(tags):
 		if tags_nr[tags[n][0]] == T - m:
-			print tags[n][0],
+			print(tags[n][0], end = ' ')
 		n = n + 1
-	print
+	print()
 	m = m + 1
 

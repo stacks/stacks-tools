@@ -66,4 +66,4 @@ for name in lijstje:
 
 
 for command in sorted(text_commands, key=text_commands.get):
-	print command, text_commands[command]
+	print(command, text_commands[command])

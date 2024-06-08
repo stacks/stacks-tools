@@ -1,6 +1,5 @@
 from functions import *
 import config
-from functions import *
 from sys import argv
 
 exclude = []
@@ -324,7 +323,7 @@ def command_allowed_in_math_mode(line, n):
 		for after in after_bigs:
 			if line.find(big + after, n ) == n:
 				return 1
-        for mid in after_middle:
+	for mid in after_middle:
 		if line.find('\\middle' + mid, n ) == n:
 			return 1
 	return 0
@@ -361,18 +360,18 @@ in_display_math_mode = 0
 for name in lijstje:
 	if name == "fdl": continue
 	if name == "coding": continue
-        if name in exclude: continue
-        print name
-        print
+	if name in exclude: continue
+	print(name)
+	print()
 	tex_file = open(path + name + ".tex", 'r')
 	nr = 0
 	for line in tex_file:
 		nr = nr + 1
 		if line.find('$$') == 0 or line.find('{equation}') >= 0 or line.find('{align}') >= 0 or line.find('{align*}') >= 0 or line.find('{eqnarray}') >= 0 or line.find('{eqnarray*}') >= 0:
 			in_math_mode = 1 - in_math_mode
-                        in_display_math_mode = 1 - in_display_math_mode
+			in_display_math_mode = 1 - in_display_math_mode
 			continue
-                if in_display_math_mode and line.find('$') >= 0:
+		if in_display_math_mode and line.find('$') >= 0:
 			print_error('Dollar in display math', line, name, nr)
 		in_math_mode = check_line(line, in_math_mode, name, nr)
 	

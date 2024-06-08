@@ -31,7 +31,7 @@ for name in lijstje:
 		error_text = length_of_line(line)
 		if error_text:
 			if ('\\begin{list}' in line) or ('\\href' in line) or ('\\frac' in line) or ('twocell' in line):
-				print "Warning: long line in " + name + " on line", line_nr
+				print("Warning: long line in " + name + " on line", line_nr)
 			else:
 				print_error(error_text, line, name, line_nr)
 
@@ -181,13 +181,13 @@ for name in lijstje:
 
 	# Check for title in the file
 	if not have_title:
-		print "No title in " + name
+		print("No title in " + name)
 		raise Exception('No title present.')
 
 	tex_file.close()
 
-print "------------------------------------------------"
-print
+print("------------------------------------------------")
+print()
 
 # Pass through all the files again to see if all references point to labels
 for name in lijstje:
@@ -224,31 +224,31 @@ for name in lijstje:
 
 	tex_file.close()
 
-print "------------------------------------------------"
-print
+print("------------------------------------------------")
+print()
 
 # Check the tags file for correctness
 tags = get_tags(path)
 nr = len(tags)
-print "There are",
-print nr,
-print "tags. Checking tags..."
+print("There are", end=' ')
+print(nr, end=' ')
+print("tags. Checking tags...")
 n = 0
 tagged_up = {}
 while n < nr:
 	label = tags[n][1]
 	if label.find(' ') >= 0:
-		print "Found illegal character in: " + label
+		print("Found illegal character in: " + label)
 	if not check_ref(label, labels) and not label.find('book-part-') == 0:
-		print "Tag pointing nowhere: ",
-		print tags[n]
+		print("Tag pointing nowhere: ", end=' ')
+		print(tags[n])
 	if not label in tagged_up:
 		tagged_up[label] = tags[n][0]
 	else:
-		print "Two tags for " + label + ": " + tags[n][0] + " and " + tagged_up[label]
+		print("Two tags for " + label + ": " + tags[n][0] + " and " + tagged_up[label])
 	n = n + 1
 
-print "All done."
+print("All done.")
 
 
 

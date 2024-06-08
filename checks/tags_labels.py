@@ -16,15 +16,15 @@ labels = {}
 
 lijstje = list_text_files(path)
 
-print
-print "You can run this script with some arguments which should be the stem"
-print "names of the tex files to which the material got moved."
-print "Or, you can use this script without arguments to see which arguments"
-print "to give it for a second time through."
-print
-print "------------------------------------------------"
-print "Finding labels."
-print
+print()
+print("You can run this script with some arguments which should be the stem")
+print("names of the tex files to which the material got moved.")
+print("Or, you can use this script without arguments to see which arguments")
+print("to give it for a second time through.")
+print()
+print("------------------------------------------------")
+print("Finding labels.")
+print()
 
 ext = ".tex"
 for name in lijstje:
@@ -62,9 +62,9 @@ for name in lijstje:
 
 
 
-print "------------------------------------------------"
-print "Fixing tags whose labels got moved."
-print
+print("------------------------------------------------")
+print("Fixing tags whose labels got moved.")
+print()
 
 fixed_tags = 0
 nowhere_tags = 0
@@ -96,8 +96,8 @@ for line in tags_file:
 		continue
 
 	if len(matches) == 0:
-		print "Cannot fix tag " + tag
-		print "Tag points nowhere"
+		print("Cannot fix tag " + tag)
+		print("Tag points nowhere")
 		nowhere_tags = nowhere_tags + 1
 		newline = line
 	
@@ -109,8 +109,8 @@ for line in tags_file:
 		if len(matches) == 1:
 			moved_detected_lazy.add(matches[0])
 		if len(matches) > 1:
-			print "Cannot fix tag " + tag
-			print "Multiple possibilites"
+			print("Cannot fix tag " + tag)
+			print("Multiple possibilites")
 			multiple_tags = multiple_tags + 1
 		newline = line
 	
@@ -123,10 +123,10 @@ tags_out.close()
 
 
 
-print
-print "------------------------------------------------"
-print "Fixing references."
-print
+print()
+print("------------------------------------------------")
+print("Fixing references.")
+print()
 
 fixed_refs = 0
 nowhere_refs = 0
@@ -151,13 +151,13 @@ def fix_ref(ref, name):
 
 		if nr > 1:
 			multiple_refs = multiple_refs + 1
-			print "Cannot fix reference " + ref + " in " + name
-			print "Multiple possibilites"
+			print("Cannot fix reference " + ref + " in " + name)
+			print("Multiple possibilites")
 
 		if nr == 0:
 			nowhere_refs = nowhere_refs + 1
-			print "Cannot fix reference " + ref + " in " + name
-			print "No corresponding labels found in listed files."
+			print("Cannot fix reference " + ref + " in " + name)
+			print("No corresponding labels found in listed files.")
 			for other in lijstje:
 				if ref in labels[other]:
 					nr = nr + 1
@@ -185,13 +185,13 @@ def fix_ref(ref, name):
 
 	if nr > 1:
 		multiple_refs = multiple_refs + 1
-		print "Cannot fix reference " + ref + " in " + name
-		print "Multiple possibilites"
+		print("Cannot fix reference " + ref + " in " + name)
+		print("Multiple possibilites")
 
 	if nr == 0:
 		nowhere_refs = nowhere_refs + 1
-		print "Cannot fix reference " + ref + " in " + name
-		print "No corresponding labels found in listed files."
+		print("Cannot fix reference " + ref + " in " + name)
+		print("No corresponding labels found in listed files.")
 		for other in lijstje:
 			if ref in labels[other]:
 				nr = nr + 1
@@ -244,30 +244,30 @@ for name in lijstje:
 	tex_out.close()
 
 
-print "------------------------------------------------"
-print
-print "Fixed tags: ",
-print fixed_tags
-print "Moved tags with multiple choices: ",
-print multiple_tags
-print "Tags pointing nowhere: ",
-print nowhere_tags
-print
-print "Fixed references: ",
-print fixed_refs
-print "Bad references with multiple choices: ",
-print multiple_refs
-print "References pointing nowhere: ",
-print nowhere_refs
-print
+print("------------------------------------------------")
+print()
+print("Fixed tags: ", end=' ')
+print(fixed_tags)
+print("Moved tags with multiple choices: ", end=' ')
+print(multiple_tags)
+print("Tags pointing nowhere: ", end=' ')
+print(nowhere_tags)
+print()
+print("Fixed references: ", end=' ')
+print(fixed_refs)
+print("Bad references with multiple choices: ", end=' ')
+print(multiple_refs)
+print("References pointing nowhere: ", end=' ')
+print(nowhere_refs)
+print()
 
-print
-print "------------------------------------------------"
-print
-print "Lazily detected files to use as input"
-print
+print()
+print("------------------------------------------------")
+print()
+print("Lazily detected files to use as input")
+print()
 for name in moved_detected_lazy:
-	print name,
-print
-print
+	print(name, end=' ')
+print()
+print()
 

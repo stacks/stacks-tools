@@ -5,10 +5,10 @@ my = config.localProject + "/my.bib"
 
 
 def print_error_bib(error_text, line, line_nr):
-	print "Error: " + error_text
-	print line,
-	print "gvim +{} my.bib".format(line_nr)
-	print
+	print("Error: " + error_text)
+	print(line, end=' ')
+	print("gvim +{} my.bib".format(line_nr))
+	print()
 
 
 types = {'BOOK', 'ARTICLE', 'INCOLLECTION', 'UNPUBLISHED', 'MISC', 'INPROCEEDINGS'}
@@ -20,7 +20,7 @@ def check_at(line, nr):
 	for type in types:
 		if line.find(type) == 1:
 			ok = 1
-                        n = len(type)
+			n = len(type)
 	if not ok:
 		print_error_bib('type not ok', line, nr)
 	else:
